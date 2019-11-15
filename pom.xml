@@ -6,7 +6,5 @@
     <packaging>pom</packaging>  
     <version>1.0-SNAPSHOT</version>  
     <modules>
-    <module>starrysea-rina-core</module>
-    <module>starrysea-rina-util</module>
   </modules>  
 </project>

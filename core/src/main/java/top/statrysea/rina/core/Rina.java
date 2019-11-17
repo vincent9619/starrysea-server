@@ -23,7 +23,7 @@ public class Rina {
         }
         isStart = true;
         while (isStart) {
-
+            //TODO 这里接收请求,使用NIO的方式
         }
     }
 

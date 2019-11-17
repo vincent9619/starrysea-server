@@ -14,6 +14,8 @@ public class ThreadUtil {
             new LinkedBlockingQueue<>()
     );
 
+    private static final ScheduledExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+
     public static void exec(Supplier<?> supplier) {
         threadPoolExecutor.execute(() -> supplier.get());
     }
@@ -24,5 +26,9 @@ public class ThreadUtil {
 
     public static <T, R> Future<R> call(Function<T, R> function, T t) {
         return threadPoolExecutor.submit(() -> function.apply(t));
+    }
+
+    public static void registerScheduleTask(Supplier<?> supplier, long delay, TimeUnit timeUnit) {
+        scheduledThreadPoolExecutor.scheduleWithFixedDelay(() -> supplier.get(), 0, delay, timeUnit);
     }
 }

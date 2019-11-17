@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
@@ -31,6 +32,10 @@ public class RinaArrayList<E> extends ArrayList<E> implements List<E> {
         return groupBy(this, groupBy);
     }
 
+    public void forEach(Consumer<? super E> consumer) {
+        forEach(this, consumer);
+    }
+
     private <T, U> List<U> collectToList(List<T> list, Function<? super T, ? extends U> map) {
         return list.stream().map(map).collect(Collectors.toList());
     }
@@ -49,5 +54,9 @@ public class RinaArrayList<E> extends ArrayList<E> implements List<E> {
 
     private <T> Map<T, List<E>> groupBy(List<E> list, Function<? super E, ? extends T> groupBy) {
         return list.stream().collect(Collectors.groupingBy(groupBy));
+    }
+
+    private void forEach(List<E> list, Consumer<? super E> consumer) {
+        list.stream().forEach(consumer);
     }
 }

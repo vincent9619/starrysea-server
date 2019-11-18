@@ -1,6 +1,5 @@
 package top.statrysea.rina.core.task.background;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.file.FileUtil;
@@ -9,13 +8,10 @@ import top.statrysea.rina.init.ServerConfig;
 
 import java.util.concurrent.TimeUnit;
 
-@Getter
 @Slf4j
-@BackgroundTask
-public class WatchServerConfigChange extends BasicBackgroundTask {
+@BackgroundTask(time = 1, timeUnit = TimeUnit.SECONDS)
+public class WatchServerConfigChange implements BackgroundTaskInterface {
 	// 定时检测服务器配置文件变化
-	private int time = 1;
-	private TimeUnit timeUnit = TimeUnit.SECONDS;
 
 	@Override
 	public void execute() {

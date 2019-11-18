@@ -8,7 +8,7 @@ import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.file.FileUtil;
 import top.starrysea.rina.util.thread.ThreadUtil;
 import top.statrysea.rina.core.annotation.BackgroundTask;
-import top.statrysea.rina.core.task.background.BasicBackgroundTask;
+import top.statrysea.rina.core.task.background.BackgroundTaskInterface;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -40,8 +40,9 @@ public class InitTaskList {
         Set<Class<?>> backgroundTasks = reflections.getTypesAnnotatedWith(BackgroundTask.class);
         backgroundTasks.forEach(aClass -> {
             try {
-                BasicBackgroundTask backgroundTask = (BasicBackgroundTask) aClass.getConstructor().newInstance();
-                ThreadUtil.registerScheduleTask(backgroundTask::execute, backgroundTask.getTime(), backgroundTask.getTimeUnit());
+                BackgroundTaskInterface backgroundTask = (BackgroundTaskInterface) aClass.getConstructor().newInstance();
+                BackgroundTask b = aClass.getAnnotation(BackgroundTask.class);
+                ThreadUtil.registerScheduleTask(backgroundTask::execute, b.time(), b.timeUnit());
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 throw new RinaException(e.getMessage(), e);
             }

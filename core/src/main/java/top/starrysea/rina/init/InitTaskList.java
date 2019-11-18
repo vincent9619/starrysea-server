@@ -1,4 +1,4 @@
-package top.statrysea.rina.init;
+package top.starrysea.rina.init;
 
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.collection.RinaArrayList;

@@ -1,9 +1,9 @@
-package top.statrysea.rina.core;
+package top.starrysea.rina.core;
 
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
-import top.statrysea.rina.init.InitTaskList;
+import top.starrysea.rina.init.InitTaskList;
 
 @Slf4j
 public class Rina {

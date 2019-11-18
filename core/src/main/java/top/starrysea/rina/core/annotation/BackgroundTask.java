@@ -1,4 +1,4 @@
-package top.statrysea.rina.core.annotation;
+package top.starrysea.rina.core.annotation;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;

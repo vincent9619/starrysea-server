@@ -7,8 +7,8 @@ import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.file.FileUtil;
 import top.starrysea.rina.util.thread.ThreadUtil;
-import top.statrysea.rina.core.annotation.BackgroundTask;
-import top.statrysea.rina.core.task.background.BackgroundTaskInterface;
+import top.starrysea.rina.core.annotation.BackgroundTask;
+import top.starrysea.rina.core.task.background.BackgroundTaskInterface;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;

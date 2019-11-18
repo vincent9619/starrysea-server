@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.init.InitTaskList;
+import top.statrysea.rina.init.InitTaskList;
 
 import java.io.IOException;
 

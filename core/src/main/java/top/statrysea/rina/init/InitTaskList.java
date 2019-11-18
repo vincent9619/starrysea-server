@@ -38,7 +38,7 @@ public class InitTaskList {
         // 筛选包含特定注解的类，实例化后定期执行
         Reflections reflections = new Reflections("top");
         Set<Class<?>> backgroundTasks = reflections.getTypesAnnotatedWith(BackgroundTask.class);
-        backgroundTasks.forEach(aClass -> {
+        backgroundTasks.stream().forEach(aClass -> {
             try {
                 BackgroundTaskInterface backgroundTask = (BackgroundTaskInterface) aClass.getConstructor().newInstance();
                 BackgroundTask b = aClass.getAnnotation(BackgroundTask.class);

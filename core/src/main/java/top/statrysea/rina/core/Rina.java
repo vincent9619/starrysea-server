@@ -5,16 +5,18 @@ import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.statrysea.rina.init.InitTaskList;
 
+import java.io.IOException;
+
 @Slf4j
 public class Rina {
 
     private static boolean isStart = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)throws IOException {
         iku();
     }
 
-    public static void iku() {
+    public static void iku() throws IOException {
         try {
             InitTaskList initTaskList = RinaObjectFactory.generateRinaObject(InitTaskList.class);
             initTaskList.execute();
@@ -23,6 +25,8 @@ public class Rina {
         }
         isStart = true;
         while (isStart) {
+            //TODO 运行的代码
+            HttpNIO.ExecuteNio();
 
         }
     }

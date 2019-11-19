@@ -36,7 +36,7 @@ public class InitTaskList {
         log.info("执行初始化服务器后台任务的初始化任务");
 
         // 筛选包含特定注解的类，实例化后定期执行
-        Reflections reflections = new Reflections("top");
+        Reflections reflections = new Reflections("top.starrysea.rina.core.task.background");
         Set<Class<?>> backgroundTasks = reflections.getTypesAnnotatedWith(BackgroundTask.class);
         backgroundTasks.stream().forEach(aClass -> {
             try {

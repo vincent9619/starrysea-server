@@ -1,11 +1,11 @@
-package top.statrysea.rina.core.task.background;
+package top.starrysea.rina.core.task.background;
 
 import org.reflections.Reflections;
+import top.starrysea.rina.core.annotation.RinaObject;
+import top.starrysea.rina.core.annotation.RinaWired;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
-import top.statrysea.rina.core.annotation.BackgroundTask;
-import top.statrysea.rina.core.annotation.RinaObject;
-import top.statrysea.rina.core.annotation.RinaWired;
+import top.starrysea.rina.core.annotation.BackgroundTask;
 
 import java.lang.reflect.Field;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class ObjectInject implements BackgroundTaskInterface {
 
 	@Override
 	public void execute() {
-		Reflections reflections = new Reflections("top");
+		Reflections reflections = new Reflections("top.starrysea.rina");
 		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaObject.class);
 		classes.stream().forEach(clazz -> {
 			try {

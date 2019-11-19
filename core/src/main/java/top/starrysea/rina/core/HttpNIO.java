@@ -1,4 +1,4 @@
-package top.statrysea.rina.core;
+package top.starrysea.rina.core;
 import top.starrysea.rina.util.thread.ThreadUtil;
 
 import java.io.IOException;

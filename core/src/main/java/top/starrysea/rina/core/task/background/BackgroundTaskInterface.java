@@ -1,4 +1,4 @@
-package top.statrysea.rina.core.task.background;
+package top.starrysea.rina.core.task.background;
 
 public interface BackgroundTaskInterface {
 	// 后台任务接口

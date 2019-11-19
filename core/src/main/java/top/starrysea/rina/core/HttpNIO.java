@@ -1,4 +1,7 @@
 package top.starrysea.rina.core;
+import lombok.extern.flogger.Flogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.starrysea.rina.util.thread.ThreadUtil;
 
 import java.io.IOException;
@@ -16,11 +19,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class HttpNIO {
-
+    private static final Logger logger = LoggerFactory.getLogger(HttpHandler.class);
     public static void ExecuteNio() throws IOException {
         // 创建 ServerSocketChannel
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
-        serverChannel.bind(new InetSocketAddress(9999));
+        serverChannel.bind(new InetSocketAddress(8888));
+
         // 配置为非阻塞
         serverChannel.configureBlocking(false);
         // 注册选择器
@@ -42,7 +46,9 @@ public class HttpNIO {
                 HttpHandler httpHandler = new HttpHandler(key);
                 //ex.exec(httpHandler);
                 //ThreadUtil.exec(httpHandler);
+                logger.info("Link Start");
                 ThreadUtil.exec(httpHandler::run);
+                logger.info("Link End");
 
             }
         }
@@ -56,6 +62,7 @@ public class HttpNIO {
         private String charset = "UTF-8";
         // 注册的事件
         private SelectionKey key;
+
 
         //@org.jetbrains.annotations.Contract(pure = true)
         public HttpHandler(SelectionKey key) {
@@ -84,41 +91,10 @@ public class HttpNIO {
             buffer.clear();
             // 从通道获取内容
             if (channel.read(buffer) == -1) {
+                logger.info("Link Failed");
                 channel.close();
             } else {
-                // 接受请求数据
-                buffer.flip();
-                String reciveMsg = Charset.forName(charset).newDecoder().decode(buffer).toString();
-                List<String> requestContent = Arrays.asList(reciveMsg.split("\r\n"));
-
-
-                for(int i=0; i<requestContent.size() ;i++){
-                    System.out.println(requestContent.get(i));
-                }
-
-
-
-                // 返回客户端
-                StringBuilder sendMsg = new StringBuilder();
-                sendMsg.append("HTTP/1.1 200 OK\r\n");// 响应行
-                // 响应头
-                sendMsg.append("cache-control: private;\r\n")
-                        .append("content-type: text/html; charset=utf-8\r\n")
-                        .append("\r\n")
-                        // 响应体
-                        .append("<!DOCTYPE html><html lang=\"zh-cn\">")
-                        .append("<head><meta charset=\"utf-8\"/><title>测试HttpServer</title></head>")
-                        .append("<body><h3>服务端接收到的请求报文</h3>");
-                for (String line : requestContent) {
-                    sendMsg.append(line+"</br>");
-                    if (line.isEmpty()) {
-                        break;
-                    }
-                }
-                sendMsg.append("</body>");
-                buffer = ByteBuffer.wrap(sendMsg.toString().getBytes(charset));
-                // 发送
-                channel.write(buffer);
+                logger.info("Link Succeed");
                 channel.close();
             }
         }

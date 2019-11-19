@@ -2,6 +2,7 @@ package top.starrysea.rina.init;
 
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import top.starrysea.rina.core.task.background.ObjectInject;
 import top.starrysea.rina.util.collection.RinaArrayList;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
@@ -21,6 +22,7 @@ public class InitTaskList {
     public InitTaskList() {
         initTaskList = new RinaArrayList<>();
         initTaskList.add(initServerConfigTask);
+        initTaskList.add(initObjectInjectionTask);
         initTaskList.add(initServerBackgroundTask);
     }
 
@@ -32,11 +34,18 @@ public class InitTaskList {
         log.info(RinaObjectFactory.getRinaObject(ServerConfig.class).toString());
     };
 
+    private static InitTask initObjectInjectionTask = () -> {
+        log.info("执行对象注入任务");
+        BackgroundTaskInterface task = new ObjectInject();
+        task.execute();
+        log.info("对象注入完成");
+    };
+
     private static InitTask initServerBackgroundTask = () -> {
         log.info("执行初始化服务器后台任务的初始化任务");
 
         // 筛选包含特定注解的类，实例化后定期执行
-        Reflections reflections = new Reflections("top.starrysea.rina.core.task.background");
+        Reflections reflections = new Reflections("top.starrysea.rina");
         Set<Class<?>> backgroundTasks = reflections.getTypesAnnotatedWith(BackgroundTask.class);
         backgroundTasks.stream().forEach(aClass -> {
             try {

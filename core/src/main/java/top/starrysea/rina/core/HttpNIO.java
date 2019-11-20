@@ -15,18 +15,17 @@ public class HttpNIO {
 
     public void executeNio() {
 
-        try {ServerSocketChannel serverChannel = ServerSocketChannel.open();
-            serverChannel.bind(new InetSocketAddress(RinaObjectFactory.getRinaObject(ServerConfig.class).getPort()));
+        ServerConfig serverConfig= new ServerConfig();
+        try (ServerSocketChannel serverChannel = ServerSocketChannel.open();
+             Selector selector = Selector.open()){
+            serverChannel.bind(new InetSocketAddress(serverConfig.getPort()));
             serverChannel.configureBlocking(false);
-            Selector selector = Selector.open();
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-
-            try {
-                if (selector.select(RinaObjectFactory.getRinaObject(ServerConfig.class).getWaitTime()) == 0) {
+            while (true) {
+                if (selector.select(serverConfig.getWaitTime()) == 0) {
+                    continue;
                 }
-            } catch (IOException e) {
-                log.error(e.getMessage(),e);
-            }
+
             // 获取待处理的selectionKey
             Iterator<SelectionKey> it = selector.selectedKeys().iterator();
             while (it.hasNext()) {
@@ -35,6 +34,7 @@ public class HttpNIO {
                 httpHandler(key);
                 log.info("结束与客户端连接");
             }
+        }
         } catch (ClosedChannelException e) {
             log.error(e.getMessage(),e);
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class HttpNIO {
 
     // 处理请求
 
-    public void httpHandler(SelectionKey key){
+    private void httpHandler(SelectionKey key){
         // TCP包长度
         int bufferSize = 1024;
         // 编码字符集
@@ -79,7 +79,7 @@ public class HttpNIO {
                     log.info("连接成功");
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.error(ex.getMessage(),ex);
             }
         }
     }

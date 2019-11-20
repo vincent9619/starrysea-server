@@ -13,11 +13,11 @@ public class Rina {
 
     private static boolean isStart = false;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         iku();
     }
 
-    public static void iku() throws IOException {
+    public static void iku()  {
         try {
             InitTaskList initTaskList = RinaObjectFactory.generateRinaObject(InitTaskList.class);
             initTaskList.execute();
@@ -28,11 +28,11 @@ public class Rina {
         while (isStart) {
             //TODO 运行的代码
             try {
-              HttpNIO hNIO =  RinaObjectFactory.generateRinaObject( HttpNIO.class);
-              hNIO.executeNio();
+                HttpNIO httpNIO =  RinaObjectFactory.generateRinaObject( HttpNIO.class);
+                httpNIO.executeNio();
             }
             catch (Exception e) {
-                throw new RinaException(e.getMessage(), e);
+                log.error(e.getMessage(),e);
             }
         }
     }

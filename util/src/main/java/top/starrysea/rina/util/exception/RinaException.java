@@ -6,6 +6,10 @@ public class RinaException extends RuntimeException {
         super(throwable);
     }
 
+    public RinaException(String message) {
+        super(message);
+    }
+
     public RinaException(String message, Throwable throwable) {
         super(message, throwable);
     }

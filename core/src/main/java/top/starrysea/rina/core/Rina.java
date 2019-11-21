@@ -1,11 +1,10 @@
 package top.starrysea.rina.core;
 
 import lombok.extern.slf4j.Slf4j;
+import top.starrysea.rina.core.connection.HttpNIO;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.init.InitTaskList;
-
-import java.io.IOException;
 
 
 @Slf4j

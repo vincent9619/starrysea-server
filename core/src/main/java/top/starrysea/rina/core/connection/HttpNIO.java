@@ -1,4 +1,4 @@
-package top.starrysea.rina.core;
+package top.starrysea.rina.core.connection;
 
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;

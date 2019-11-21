@@ -70,7 +70,10 @@ public class HttpNIO {
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));
+
+
             } catch (ClosedChannelException e) {
+                key.cancel();
                 log.error(e.getMessage(), e);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);

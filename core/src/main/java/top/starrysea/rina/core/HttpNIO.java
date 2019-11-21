@@ -30,10 +30,12 @@ public class HttpNIO {
                 // 获取待处理的selectionKey
                 Iterator<SelectionKey> it = selector.selectedKeys().iterator();
                 while (it.hasNext()) {
-                    SelectionKey key = it.next();
+                    SelectionKey Key = it.next();
                     log.info("开始建立与客户端连接");
-                    ThreadUtil.exec(() -> httpHandler(key));
+                    ThreadUtil.exec(() -> httpHandler(Key));
                     log.info("结束与客户端连接");
+
+                    it.remove();
                 }
             }
         } catch (ClosedChannelException e) {
@@ -54,6 +56,8 @@ public class HttpNIO {
         if (key.isAcceptable()) {
             ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
             // 接收的客户端的连接
+
+
             try{
                 SocketChannel channel = serverChannel.accept();
                 channel.configureBlocking(false);
@@ -65,6 +69,8 @@ public class HttpNIO {
             } catch (IOException e) {
                 log.error(e.getMessage(),e);
             }
+
+
         }
         if (key.isReadable()) {
             try(SocketChannel channel = (SocketChannel) key.channel()){
@@ -78,7 +84,7 @@ public class HttpNIO {
                 } else {
                     log.info("连接成功");
                 }
-                key.cancel();
+
             } catch (IOException ex) {
                 log.error(ex.getMessage(),ex);
 

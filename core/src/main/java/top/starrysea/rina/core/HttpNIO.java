@@ -13,8 +13,12 @@ import java.util.Iterator;
 @Slf4j
 public class HttpNIO {
     private static boolean isStart = false;
-    public void executeNio() {
 
+    public static void yame() {
+        isStart = false;
+    }
+
+    public void executeNio() {
         ServerConfig serverConfig = RinaObjectFactory.getRinaObject(ServerConfig.class);
         try (ServerSocketChannel serverChannel = ServerSocketChannel.open();
              Selector selector = Selector.open()) {
@@ -26,7 +30,6 @@ public class HttpNIO {
                 if (selector.select(serverConfig.getWaitTime()) == 0) {
                     continue;
                 }
-
                 // 获取待处理的selectionKey
                 Iterator<SelectionKey> it = selector.selectedKeys().iterator();
                 while (it.hasNext()) {
@@ -35,7 +38,6 @@ public class HttpNIO {
                     ThreadUtil.exec(() -> httpHandler(Key));
                     log.info("结束与客户端连接");
                     it.remove();
-
                 }
             }
         } catch (ClosedChannelException e) {
@@ -52,12 +54,9 @@ public class HttpNIO {
         int bufferSize = 1024;
         // 编码字符集
         String charset = "UTF-8";
-
         if (key.isAcceptable()) {
             ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
             // 接收的客户端的连接
-
-
             try{
                 SocketChannel channel = serverChannel.accept();
                 if(channel==null){
@@ -69,14 +68,11 @@ public class HttpNIO {
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));
-
             } catch (ClosedChannelException e) {
                 log.error(e.getMessage(),e);
             } catch (IOException e) {
                 log.error(e.getMessage(),e);
             }
-
-
         }
         if (key.isReadable()) {
             try(SocketChannel channel = (SocketChannel) key.channel()){
@@ -84,16 +80,13 @@ public class HttpNIO {
                 ByteBuffer buffer = (ByteBuffer) key.attachment();
                 buffer.clear();
                 // 从通道获取内容
-
                 if (channel.read(buffer) == -1) {
                     log.info("连接失败");
                 } else {
                     log.info("连接成功");
                 }
-
             } catch (IOException ex) {
                 log.error(ex.getMessage(),ex);
-
             }
         }
     }

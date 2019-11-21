@@ -13,7 +13,6 @@ public class Rina {
 
     public static void main(String[] args)  {
         iku();
-        HttpNIO.yame();
     }
 
     public static void iku()  {

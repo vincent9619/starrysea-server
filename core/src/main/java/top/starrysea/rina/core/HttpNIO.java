@@ -62,9 +62,7 @@ public class HttpNIO {
                 if(channel==null){
                 return;
                 }
-                else{
                     channel.configureBlocking(false);
-                }
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));

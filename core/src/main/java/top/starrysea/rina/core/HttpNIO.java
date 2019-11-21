@@ -1,8 +1,10 @@
 package top.starrysea.rina.core;
+
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.thread.ThreadUtil;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -41,15 +43,15 @@ public class HttpNIO {
                 }
             }
         } catch (ClosedChannelException e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
         } catch (IOException e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
         }
     }
 
     // 处理请求
 
-    private void httpHandler(SelectionKey key){
+    private void httpHandler(SelectionKey key) {
         // TCP包长度
         int bufferSize = 1024;
         // 编码字符集
@@ -57,23 +59,23 @@ public class HttpNIO {
         if (key.isAcceptable()) {
             ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
             // 接收的客户端的连接
-            try{
+            try {
                 SocketChannel channel = serverChannel.accept();
-                if(channel==null){
-                return;
+                if (channel == null) {
+                    return;
                 }
-                    channel.configureBlocking(false);
+                channel.configureBlocking(false);
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));
             } catch (ClosedChannelException e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             } catch (IOException e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             }
         }
         if (key.isReadable()) {
-            try(SocketChannel channel = (SocketChannel) key.channel()){
+            try (SocketChannel channel = (SocketChannel) key.channel()) {
                 // 获取Buffer并重置
                 ByteBuffer buffer = (ByteBuffer) key.attachment();
                 buffer.clear();
@@ -84,7 +86,7 @@ public class HttpNIO {
                     log.info("连接成功");
                 }
             } catch (IOException ex) {
-                log.error(ex.getMessage(),ex);
+                log.error(ex.getMessage(), ex);
             }
         }
     }

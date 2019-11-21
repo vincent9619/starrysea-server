@@ -34,8 +34,8 @@ public class HttpNIO {
                     log.info("开始建立与客户端连接");
                     ThreadUtil.exec(() -> httpHandler(Key));
                     log.info("结束与客户端连接");
-
                     it.remove();
+
                 }
             }
         } catch (ClosedChannelException e) {
@@ -60,10 +60,16 @@ public class HttpNIO {
 
             try{
                 SocketChannel channel = serverChannel.accept();
-                channel.configureBlocking(false);
+                if(channel==null){
+                return;
+                }
+                else{
+                    channel.configureBlocking(false);
+                }
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));
+
             } catch (ClosedChannelException e) {
                 log.error(e.getMessage(),e);
             } catch (IOException e) {

@@ -21,10 +21,11 @@ public class HttpNIO {
             serverChannel.bind(new InetSocketAddress(serverConfig.getPort()));
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-            while (true) {
+
                 if (selector.select(serverConfig.getWaitTime()) == 0) {
-                    continue;
+                   return;
                 }
+
 
             // 获取待处理的selectionKey
             Iterator<SelectionKey> it = selector.selectedKeys().iterator();
@@ -34,11 +35,10 @@ public class HttpNIO {
                 httpHandler(key);
                 log.info("结束与客户端连接");
             }
-        }
-        } catch (ClosedChannelException e) {
-            log.error(e.getMessage(),e);
-        } catch (IOException e) {
-            log.error(e.getMessage(),e);
+        } catch (ClosedChannelException ex) {
+            log.error(ex.getMessage(),ex);
+        } catch (IOException ex) {
+            log.error(ex.getMessage(),ex);
         }
     }
 

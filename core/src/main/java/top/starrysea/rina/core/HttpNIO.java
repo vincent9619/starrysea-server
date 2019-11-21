@@ -12,36 +12,36 @@ import java.util.Iterator;
 
 @Slf4j
 public class HttpNIO {
-
+    private static boolean isStart = false;
     public void executeNio() {
 
-        ServerConfig serverConfig= RinaObjectFactory.getRinaObject(ServerConfig.class);
+        ServerConfig serverConfig = RinaObjectFactory.getRinaObject(ServerConfig.class);
         try (ServerSocketChannel serverChannel = ServerSocketChannel.open();
-             Selector selector = Selector.open()){
+             Selector selector = Selector.open()) {
             serverChannel.bind(new InetSocketAddress(serverConfig.getPort()));
             serverChannel.configureBlocking(false);
             serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-
+            isStart = true;
+            while (isStart) {
                 if (selector.select(serverConfig.getWaitTime()) == 0) {
-                   return;
+                    continue;
                 }
 
-
-            // 获取待处理的selectionKey
-            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
-            while (it.hasNext()) {
-                SelectionKey key = it.next();
-                log.info("开始建立与客户端连接");
-                ThreadUtil.exec(()->httpHandler(key));
-                log.info("结束与客户端连接");
+                // 获取待处理的selectionKey
+                Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+                while (it.hasNext()) {
+                    SelectionKey key = it.next();
+                    log.info("开始建立与客户端连接");
+                    ThreadUtil.exec(() -> httpHandler(key));
+                    log.info("结束与客户端连接");
+                }
             }
-        } catch (ClosedChannelException ex) {
-            log.error(ex.getMessage(),ex);
-        } catch (IOException ex) {
-            log.error(ex.getMessage(),ex);
+        } catch (ClosedChannelException e) {
+            log.error(e.getMessage(),e);
+        } catch (IOException e) {
+            log.error(e.getMessage(),e);
         }
     }
-
 
     // 处理请求
 
@@ -78,8 +78,10 @@ public class HttpNIO {
                 } else {
                     log.info("连接成功");
                 }
+                key.cancel();
             } catch (IOException ex) {
                 log.error(ex.getMessage(),ex);
+
             }
         }
     }

@@ -11,7 +11,7 @@ import java.io.IOException;
 @Slf4j
 public class Rina {
 
-    private static boolean isStart = false;
+
 
     public static void main(String[] args)  {
         iku();
@@ -24,8 +24,8 @@ public class Rina {
         } catch (Exception e) {
             throw new RinaException(e.getMessage(), e);
         }
-        isStart = true;
-        while (isStart) {
+
+
             //TODO 运行的代码
             try {
                 HttpNIO httpNIO =  RinaObjectFactory.generateRinaObject( HttpNIO.class);
@@ -34,10 +34,10 @@ public class Rina {
             catch (Exception e) {
                 log.error(e.getMessage(),e);
             }
-        }
+
     }
 
-    public static void yame() {
+    /*public static void yame() {
         isStart = false;
-    }
+    }*/
 }

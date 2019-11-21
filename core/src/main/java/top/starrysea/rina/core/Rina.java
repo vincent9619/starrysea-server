@@ -17,13 +17,13 @@ public class Rina {
 
     public static void iku() {
         try {
-            InitTaskList initTaskList = RinaObjectFactory.getRinaObject(InitTaskList.class);
+            InitTaskList initTaskList = RinaObjectFactory.generateRinaObject(InitTaskList.class);
             initTaskList.execute();
         } catch (Exception e) {
             throw new RinaException(e.getMessage(), e);
         }
         try {
-            HttpNIO httpNIO = RinaObjectFactory.generateRinaObject(HttpNIO.class);
+            HttpNIO httpNIO = RinaObjectFactory.getRinaObject(HttpNIO.class);
             httpNIO.executeNio();
         } catch (Exception e) {
             log.error(e.getMessage(), e);

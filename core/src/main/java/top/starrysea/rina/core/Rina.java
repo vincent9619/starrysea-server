@@ -23,7 +23,7 @@ public class Rina {
             throw new RinaException(e.getMessage(), e);
         }
         try {
-            HttpNIO httpNIO = RinaObjectFactory.generateRinaObject(HttpNIO.class);
+            HttpNIO httpNIO = RinaObjectFactory.getRinaObject(HttpNIO.class);
             httpNIO.executeNio();
         } catch (Exception e) {
             log.error(e.getMessage(), e);

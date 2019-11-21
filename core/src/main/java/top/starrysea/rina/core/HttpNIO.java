@@ -1,6 +1,7 @@
 package top.starrysea.rina.core;
 
 import lombok.extern.slf4j.Slf4j;
+import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.thread.ThreadUtil;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 
 
 @Slf4j
+@RinaObject
 public class HttpNIO {
     private static boolean isStart = false;
 
@@ -68,7 +70,10 @@ public class HttpNIO {
                 // 注册到选择器
                 channel.register(key.selector(), SelectionKey.OP_READ,
                         ByteBuffer.allocate(bufferSize));
+
+
             } catch (ClosedChannelException e) {
+                key.cancel();
                 log.error(e.getMessage(), e);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);

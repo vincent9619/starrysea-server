@@ -17,7 +17,7 @@ public class Rina {
 
     public static void iku() {
         try {
-            InitTaskList initTaskList = RinaObjectFactory.generateRinaObject(InitTaskList.class);
+            InitTaskList initTaskList = RinaObjectFactory.getRinaObject(InitTaskList.class);
             initTaskList.execute();
         } catch (Exception e) {
             throw new RinaException(e.getMessage(), e);

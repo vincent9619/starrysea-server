@@ -1,6 +1,7 @@
 package top.starrysea.rina.core;
 
 import lombok.extern.slf4j.Slf4j;
+import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.thread.ThreadUtil;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 
 
 @Slf4j
+@RinaObject
 public class HttpNIO {
     private static boolean isStart = false;
 

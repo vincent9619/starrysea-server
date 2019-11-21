@@ -1,2 +1,3 @@
 port: 8082
 basePackage: top.starrysea.rina
+waitTime: 500

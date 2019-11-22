@@ -1,6 +1,6 @@
 package top.starrysea.rina.core.connection;
 
-public class Accept {
+public class AcceptClassWhichBelongToHttpClass {
     private Double q;
     private String acceptContent;
     private String v;

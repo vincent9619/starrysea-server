@@ -5,6 +5,7 @@ import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.core.annotation.RinaWired;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
+import top.starrysea.rina.util.string.StringUtil;
 import top.starrysea.rina.util.thread.ThreadUtil;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.List;
 @RinaObject
 public class HttpNIO {
     @RinaWired
-    private Handle handle;
+    private SplitHttpReportHandle splitHttpReportHandle;
 
     private static boolean isStart = false;
 
@@ -100,7 +101,7 @@ public class HttpNIO {
                     log.info("连接成功");
                     buffer.flip();
                     String receiveMessage = Charset.forName(charset).newDecoder().decode(buffer).toString();
-                    if (receiveMessage == null || receiveMessage == "") {
+                    if (StringUtil.isBlank(receiveMessage)) {
                         return;
                     } else {
                         List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
@@ -108,7 +109,7 @@ public class HttpNIO {
                         for (int i = 0; i < requestContent.size(); i++) {
                             log.info(requestContent.get(i));
                         }
-                        handle.handleRun(requestContent);
+                        splitHttpReportHandle.handleRun(requestContent);
                         //log.info(handle.handleRun(requestContent).getAcceptLanguage().toString());
                         //log.info(handle.handleRun(requestContent).getVersion());
 
@@ -136,12 +137,12 @@ public class HttpNIO {
                         channel.close();
                     }
                 }
-                } catch(IOException ex){
-                    log.error(ex.getMessage(), ex);
-                }
+            } catch (IOException ex) {
+                log.error(ex.getMessage(), ex);
             }
         }
     }
+}
 
 
 

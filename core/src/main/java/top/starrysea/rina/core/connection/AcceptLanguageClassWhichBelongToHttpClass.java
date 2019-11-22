@@ -1,6 +1,6 @@
 package top.starrysea.rina.core.connection;
 
-public class AcceptLanguage {
+public class AcceptLanguageClassWhichBelongToHttpClass {
     private Double q;
     private String acceptLanguage;
 

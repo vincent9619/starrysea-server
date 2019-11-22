@@ -6,24 +6,24 @@ import top.starrysea.rina.util.collection.RinaArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Http {
-    private String httpMethod ;
+public class HttpContent {
+    private String httpMethod;
     private String path;
-    private String version ;
-    private String Host ;
+    private String version;
+    private String Host;
     private String connection;
     private String Pragma;
     private String cacheControl;
     private String userAgent;
     private String acceptMiddle;
-    private List<Accept> accept = new RinaArrayList<>();
+    private List<AcceptClassWhichBelongToHttpClass> acceptClassWhichBelongToHttpClass = new RinaArrayList<>();
     private String secFetchSite;
     private String secFetchMode;
     private String referer;
     private String acceptEncodingMiddle;
     private List<String> acceptEncoding = new ArrayList();
     private String acceptLanguageMiddle;
-    private List<AcceptLanguage> acceptLanguage = new ArrayList();
+    private List<AcceptLanguageClassWhichBelongToHttpClass> acceptLanguageClassWhichBelongToHttpClass = new ArrayList();
 
     public String getHttpMethod() {
         return httpMethod;
@@ -97,12 +97,12 @@ public class Http {
         this.acceptMiddle = acceptMiddle;
     }
 
-    public List<Accept> getAccept() {
-        return accept;
+    public List<AcceptClassWhichBelongToHttpClass> getAcceptClassWhichBelongToHttpClass() {
+        return acceptClassWhichBelongToHttpClass;
     }
 
-    public void setAccept(List<Accept> accept) {
-        this.accept = accept;
+    public void setAcceptClassWhichBelongToHttpClass(List<AcceptClassWhichBelongToHttpClass> acceptClassWhichBelongToHttpClass) {
+        this.acceptClassWhichBelongToHttpClass = acceptClassWhichBelongToHttpClass;
     }
 
     public String getSecFetchSite() {
@@ -153,11 +153,11 @@ public class Http {
         this.acceptLanguageMiddle = acceptLanguageMiddle;
     }
 
-    public List<AcceptLanguage> getAcceptLanguage() {
-        return acceptLanguage;
+    public List<AcceptLanguageClassWhichBelongToHttpClass> getAcceptLanguageClassWhichBelongToHttpClass() {
+        return acceptLanguageClassWhichBelongToHttpClass;
     }
 
-    public void setAcceptLanguage(List<AcceptLanguage> acceptLanguage) {
-        this.acceptLanguage = acceptLanguage;
+    public void setAcceptLanguageClassWhichBelongToHttpClass(List<AcceptLanguageClassWhichBelongToHttpClass> acceptLanguageClassWhichBelongToHttpClass) {
+        this.acceptLanguageClassWhichBelongToHttpClass = acceptLanguageClassWhichBelongToHttpClass;
     }
 }

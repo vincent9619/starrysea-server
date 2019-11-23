@@ -8,17 +8,28 @@ import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class ObjectInject {
 
     private static Set<String> existRinaObjectNameSet = new HashSet<>();
 
+    private static Map<Class<?>, Object> localObjectsCache = new HashMap<>();
+
     // 为 RinaObject 注入
     public void execute() {
         Reflections reflections = new Reflections(RinaObjectFactory.getRinaObject(ServerConfig.class).getBasePackage());
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaObject.class);
+        classes.stream().forEach(clazz -> {
+            try {
+                localObjectsCache.put(clazz, clazz.getConstructor().newInstance());
+            } catch (Exception e) {
+                throw new RinaException(e.getMessage(), e);
+            }
+        });
         classes.stream().forEach(this::inject);
     }
 
@@ -27,13 +38,11 @@ public class ObjectInject {
             throw new RinaException(clazz.getName() + "类有循环依赖!");
         }
         existRinaObjectNameSet.add(clazz.getName());
-        T result = RinaObjectFactory.getRinaObject(clazz);
-        if (result != null) {
-            existRinaObjectNameSet.remove(clazz.getName());
-            return result;
+        T result = (T) localObjectsCache.get(clazz);
+        if (result == null) {
+            throw new RinaException(clazz.getName() + "类不是RinaObject");
         }
         try {
-            result = clazz.getConstructor().newInstance();
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
                 RinaWired wired = field.getAnnotation(RinaWired.class);

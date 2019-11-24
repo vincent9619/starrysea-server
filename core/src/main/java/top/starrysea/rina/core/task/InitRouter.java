@@ -14,43 +14,21 @@ import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 public class InitRouter {
+	private RinaRequestMapping requestMapping = new RinaRequestMapping();
+
 	public void execute() {
 		Reflections reflections = new Reflections(RinaObjectFactory.getRinaObject(ServerConfig.class).getBasePackage());
-		RinaRequestMapping requestMapping = new RinaRequestMapping();
 		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaController.class);
 
 		classes.stream().forEach(aClass -> {
-			Reflections methodReflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forClass(aClass)).setScanners(new MethodAnnotationsScanner()));
-			methodReflections.getMethodsAnnotatedWith(RinaGet.class).stream().forEach(method -> {
-				try {
-					RinaGet getObject = method.getAnnotation(RinaGet.class);
-					RequestInfo requestInfo = new RequestInfo();
-					requestInfo.setHttpMethod("get");
-					requestInfo.setPath(getObject.value());
-					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
-					routeInfo.setMethod(method);
-					requestMapping.registerRouteInfo(requestInfo, routeInfo);
-				} catch (Exception e) {
-					throw new RinaException(e.getMessage(), e);
-				}
-			});
-
-			methodReflections.getMethodsAnnotatedWith(RinaPost.class).stream().forEach(method -> {
-				try {
-					RinaPost postObject = method.getAnnotation(RinaPost.class);
-					RequestInfo requestInfo = new RequestInfo();
-					requestInfo.setHttpMethod("post");
-					requestInfo.setPath(postObject.value());
-					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
-					routeInfo.setMethod(method);
-					requestMapping.registerRouteInfo(requestInfo, routeInfo);
-				} catch (Exception e) {
-					throw new RinaException(e.getMessage(), e);
-				}
-			});
+			Reflections methodReflections = new Reflections(new ConfigurationBuilder()
+					.setUrls(ClasspathHelper.forClass(aClass)).setScanners(new MethodAnnotationsScanner()));
+			registerMethod(methodReflections, RinaGet.class);
+			registerMethod(methodReflections, RinaPost.class);
 		});
 
 		try {
@@ -58,5 +36,25 @@ public class InitRouter {
 		} catch (Exception e) {
 			throw new RinaException(e.getMessage(), e);
 		}
+	}
+
+	private void registerMethod(Reflections reflections, Class<? extends Annotation> annotation) {
+		reflections.getMethodsAnnotatedWith(annotation).stream().forEach(method -> {
+			RequestInfo requestInfo = new RequestInfo();
+			RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
+			if (annotation == RinaGet.class) {
+				RinaGet getObject = method.getAnnotation(RinaGet.class);
+				requestInfo.setHttpMethod("get");
+				requestInfo.setPath(getObject.value());
+				routeInfo.setMethod(method);
+				requestMapping.registerRouteInfo(requestInfo, routeInfo);
+			} else if (annotation == RinaPost.class) {
+				RinaPost postObject = method.getAnnotation(RinaPost.class);
+				requestInfo.setHttpMethod("post");
+				requestInfo.setPath(postObject.value());
+				routeInfo.setMethod(method);
+				requestMapping.registerRouteInfo(requestInfo, routeInfo);
+			}
+		});
 	}
 }

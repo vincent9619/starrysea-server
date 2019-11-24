@@ -27,7 +27,7 @@ public class InitRouter {
 			methodReflections.getMethodsAnnotatedWith(RinaGet.class).stream().forEach(method -> {
 				try {
 					RinaGet getObject = method.getAnnotation(RinaGet.class);
-					RequestInfo requestInfo = RinaObjectFactory.generateRinaObject(RequestInfo.class);
+					RequestInfo requestInfo = new RequestInfo();
 					requestInfo.setHttpMethod("get");
 					requestInfo.setPath(getObject.value());
 					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
@@ -40,10 +40,10 @@ public class InitRouter {
 
 			methodReflections.getMethodsAnnotatedWith(RinaPost.class).stream().forEach(method -> {
 				try {
-					RinaPost getObject = method.getAnnotation(RinaPost.class);
-					RequestInfo requestInfo = RinaObjectFactory.generateRinaObject(RequestInfo.class);
+					RinaPost postObject = method.getAnnotation(RinaPost.class);
+					RequestInfo requestInfo = new RequestInfo();
 					requestInfo.setHttpMethod("post");
-					requestInfo.setPath(getObject.value());
+					requestInfo.setPath(postObject.value());
 					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
 					routeInfo.setMethod(method);
 					requestMapping.registerRouteInfo(requestInfo, routeInfo);

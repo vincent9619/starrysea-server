@@ -1,6 +1,9 @@
 package top.starrysea.rina.core.connection;
 
-public class AcceptLanguageClassWhichBelongToHttpClass {
+import lombok.Data;
+
+@Data
+public class AcceptLanguage {
     private Double q;
     private String acceptLanguage;
 
@@ -12,7 +15,7 @@ public class AcceptLanguageClassWhichBelongToHttpClass {
         this.acceptLanguage = acceptLanguage;
     }
 
-    @Override
+
     public String toString() {
         return "acceptLanguage{" +
                 "q=" + q +
@@ -20,13 +23,7 @@ public class AcceptLanguageClassWhichBelongToHttpClass {
                 '}';
     }
 
-    public Double getQ() {
-        return q;
-    }
 
-    public String getAcceptLanguage() {
-        return acceptLanguage;
-    }
 
 }
 

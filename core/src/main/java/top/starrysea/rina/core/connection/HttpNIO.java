@@ -22,7 +22,7 @@ import java.util.List;
 @RinaObject
 public class HttpNIO {
     @RinaWired
-    private SplitHttpReportHandle splitHttpReportHandle;
+    private HttpMessageResolver httpMessageResolver;
 
     private static boolean isStart = false;
 
@@ -97,46 +97,42 @@ public class HttpNIO {
                 if (channel.read(buffer) == -1) {
                     channel.close();
                     log.info("连接失败");
-                } else {
-                    log.info("连接成功");
-                    buffer.flip();
-                    String receiveMessage = Charset.forName(charset).newDecoder().decode(buffer).toString();
-                    if (StringUtil.isBlank(receiveMessage)) {
-                        return;
-                    } else {
-                        List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
-
-                        for (int i = 0; i < requestContent.size(); i++) {
-                            log.info(requestContent.get(i));
-                        }
-                        splitHttpReportHandle.handleRun(requestContent);
-                        //log.info(handle.handleRun(requestContent).getAcceptLanguage().toString());
-                        //log.info(handle.handleRun(requestContent).getVersion());
-
-                        // 返回客户端
-                        StringBuilder sendMsg = new StringBuilder();
-                        sendMsg.append("HTTP/1.1 200 OK\r\n");// 响应行
-                        // 响应头
-                        sendMsg.append("cache-control: private;\r\n")
-                                .append("content-type: text/html; charset=utf-8\r\n")
-                                .append("\r\n")
-                                // 响应体
-                                .append("<!DOCTYPE html><html lang=\"zh-cn\">")
-                                .append("<head><meta charset=\"utf-8\"/><title>测试HttpServer</title></head>")
-                                .append("<body><h3>服务端接收到的请求报文</h3>");
-                        for (String line : requestContent) {
-                            sendMsg.append(line + "</br>");
-                            if (line.isEmpty()) {
-                                break;
-                            }
-                        }
-                        sendMsg.append("</body>");
-                        buffer = ByteBuffer.wrap(sendMsg.toString().getBytes(charset));
-                        // 发送
-                        channel.write(buffer);
-                        channel.close();
-                    }
                 }
+                log.info("连接成功");
+                buffer.flip();
+                String receiveMessage = Charset.forName(charset).newDecoder().decode(buffer).toString();
+                if (StringUtil.isBlank(receiveMessage)) {
+                    return;
+                } else {
+                    List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
+                    requestContent.stream().forEach(log::info);
+                    httpMessageResolver.handleRun(requestContent);
+
+
+                    // 返回客户端
+                    StringBuilder sendMsg = new StringBuilder();
+                    sendMsg.append("HTTP/1.1 200 OK\r\n");// 响应行
+                    // 响应头
+                    sendMsg.append("cache-control: private;\r\n")
+                            .append("content-type: text/html; charset=utf-8\r\n")
+                            .append("\r\n")
+                            // 响应体
+                            .append("<!DOCTYPE html><html lang=\"zh-cn\">")
+                            .append("<head><meta charset=\"utf-8\"/><title>测试HttpServer</title></head>")
+                            .append("<body><h3>服务端接收到的请求报文</h3>");
+                    for (String line : requestContent) {
+                        sendMsg.append(line + "</br>");
+                        if (line.isEmpty()) {
+                            break;
+                        }
+                    }
+                    sendMsg.append("</body>");
+                    buffer = ByteBuffer.wrap(sendMsg.toString().getBytes(charset));
+                    // 发送
+                    channel.write(buffer);
+                    channel.close();
+                }
+
             } catch (IOException ex) {
                 log.error(ex.getMessage(), ex);
             }

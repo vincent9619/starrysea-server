@@ -30,7 +30,7 @@ public class InitRouter {
 				try {
 					RinaGet getObject = method.getAnnotation(RinaGet.class);
 					Request request = RinaObjectFactory.generateRinaObject(Request.class);
-					request.setMethod("get");
+					request.setHttpMethod("get");
 					request.setPath(getObject.value());
 					RinaRequestRouteInfo routeInfo = RinaObjectFactory.generateRinaObject(RinaRequestRouteInfo.class);
 					routeInfo.setMethod(method);
@@ -44,7 +44,7 @@ public class InitRouter {
 				try {
 					RinaPost getObject = method.getAnnotation(RinaPost.class);
 					Request request = RinaObjectFactory.generateRinaObject(Request.class);
-					request.setMethod("post");
+					request.setHttpMethod("post");
 					request.setPath(getObject.value());
 					RinaRequestRouteInfo routeInfo = RinaObjectFactory.generateRinaObject(RinaRequestRouteInfo.class);
 					routeInfo.setMethod(method);

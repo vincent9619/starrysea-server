@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Request {
-	private String method;
+	private String httpMethod;
 	private String path;
 }

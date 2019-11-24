@@ -7,21 +7,19 @@ import org.reflections.util.ConfigurationBuilder;
 import top.starrysea.rina.core.annotation.RinaController;
 import top.starrysea.rina.core.annotation.RinaGet;
 import top.starrysea.rina.core.annotation.RinaPost;
-import top.starrysea.rina.core.router.Request;
+import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class InitRouter {
 	public void execute() {
 		Reflections reflections = new Reflections(RinaObjectFactory.getRinaObject(ServerConfig.class).getBasePackage());
-		Map<Request, RinaRequestRouteInfo> routeMap = new HashMap<>();
+		RinaRequestMapping requestMapping = new RinaRequestMapping();
 		Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaController.class);
 
 		classes.stream().forEach(aClass -> {
@@ -29,12 +27,12 @@ public class InitRouter {
 			methodReflections.getMethodsAnnotatedWith(RinaGet.class).stream().forEach(method -> {
 				try {
 					RinaGet getObject = method.getAnnotation(RinaGet.class);
-					Request request = RinaObjectFactory.generateRinaObject(Request.class);
-					request.setHttpMethod("get");
-					request.setPath(getObject.value());
-					RinaRequestRouteInfo routeInfo = RinaObjectFactory.generateRinaObject(RinaRequestRouteInfo.class);
+					RequestInfo requestInfo = RinaObjectFactory.generateRinaObject(RequestInfo.class);
+					requestInfo.setHttpMethod("get");
+					requestInfo.setPath(getObject.value());
+					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
 					routeInfo.setMethod(method);
-					routeMap.put(request, routeInfo);
+					requestMapping.registerRouteInfo(requestInfo, routeInfo);
 				} catch (Exception e) {
 					throw new RinaException(e.getMessage(), e);
 				}
@@ -43,12 +41,12 @@ public class InitRouter {
 			methodReflections.getMethodsAnnotatedWith(RinaPost.class).stream().forEach(method -> {
 				try {
 					RinaPost getObject = method.getAnnotation(RinaPost.class);
-					Request request = RinaObjectFactory.generateRinaObject(Request.class);
-					request.setHttpMethod("post");
-					request.setPath(getObject.value());
-					RinaRequestRouteInfo routeInfo = RinaObjectFactory.generateRinaObject(RinaRequestRouteInfo.class);
+					RequestInfo requestInfo = RinaObjectFactory.generateRinaObject(RequestInfo.class);
+					requestInfo.setHttpMethod("post");
+					requestInfo.setPath(getObject.value());
+					RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
 					routeInfo.setMethod(method);
-					routeMap.put(request, routeInfo);
+					requestMapping.registerRouteInfo(requestInfo, routeInfo);
 				} catch (Exception e) {
 					throw new RinaException(e.getMessage(), e);
 				}
@@ -56,8 +54,6 @@ public class InitRouter {
 		});
 
 		try {
-			RinaRequestMapping requestMapping = RinaObjectFactory.generateRinaObject(RinaRequestMapping.class);
-			requestMapping.setRouteInfoMap(routeMap);
 			RinaObjectFactory.putRinaObject(RinaRequestMapping.class, requestMapping);
 		} catch (Exception e) {
 			throw new RinaException(e.getMessage(), e);

@@ -1,4 +1,4 @@
-package top.starrysea.rina.core.connection;
+package top.starrysea.rina.core.connection.entity;
 
 import lombok.Data;
 

@@ -2,10 +2,15 @@ package top.starrysea.rina.core.connection;
 
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;
+import top.starrysea.rina.core.connection.entity.Accept;
+import top.starrysea.rina.core.connection.entity.AcceptLanguage;
+import top.starrysea.rina.core.connection.entity.ContentAndQuality;
+import top.starrysea.rina.core.connection.entity.HttpContent;
 import top.starrysea.rina.util.collection.RinaArrayList;
 import top.starrysea.rina.util.string.StringUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RinaObject
@@ -108,6 +113,28 @@ public class HttpMessageResolver {
             hp.setAccepts(acceptListNew);
         }
         return hp;
+    }
+
+    private List<ContentAndQuality> resolve2ContentAndQuality(String httpHeaderValue) {
+        List<String> contentAndQualityItemList = Arrays.asList(httpHeaderValue.split(","));
+        return contentAndQualityItemList
+                .stream()
+                .map(contentAndQualityItem -> {
+                    List<String> contentAndQualityList = Arrays.asList(contentAndQualityItem.split(";"));
+                    ContentAndQuality contentAndQuality = new ContentAndQuality();
+                    contentAndQuality.setContent(contentAndQualityList.get(0).trim());
+                    if (contentAndQualityList.size() > 1 && contentAndQualityList.get(1).startsWith("q=")) {
+                        contentAndQuality.setQuality(Double.parseDouble(contentAndQualityList.get(1).trim().substring(2)));
+                    }
+                    return contentAndQuality;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        HttpMessageResolver h = new HttpMessageResolver();
+        List<ContentAndQuality> contentAndQualityList = h.resolve2ContentAndQuality("text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8");
+        System.out.println(contentAndQualityList);
     }
 }
 

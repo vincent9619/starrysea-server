@@ -6,5 +6,5 @@ import java.lang.reflect.Method;
 
 @Data
 public class RinaRequestRouteInfo {
-	Method method;
+	private Method method;
 }

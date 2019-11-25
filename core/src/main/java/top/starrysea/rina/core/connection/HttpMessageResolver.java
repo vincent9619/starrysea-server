@@ -2,8 +2,7 @@ package top.starrysea.rina.core.connection;
 
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;
-import top.starrysea.rina.core.connection.entity.ContentAndQuality;
-import top.starrysea.rina.core.connection.entity.HttpContent;
+import top.starrysea.rina.core.connection.entity.*;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 import top.starrysea.rina.util.collection.RinaArrayList;
@@ -15,11 +14,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RinaObject
 public class HttpMessageResolver {
-    private List<ContentAndQuality> contentAndQualityAcceptLanguageList = new RinaArrayList<>();
-    private List<ContentAndQuality> contentAndQualityAcceptEncodingList = new RinaArrayList<>();
-    private List<ContentAndQuality> contentAndQualityAcceptList = new RinaArrayList<>();
-    private HttpMethod httpMethod;
-    private HttpVersion httpVersion;
 
 
     public HttpContent handleRun(List<String> serverReport) {
@@ -41,55 +35,80 @@ public class HttpMessageResolver {
             String[] midRest = restLine.split(":", 2);
             httpMap.put(midRest[0], midRest[1]);
         }
-        //将属性值传入http
 
-        httpMethod = HttpMethod.valueOf((String) httpMap.get("httpMethod"));
+        //将属性值传入http
+        hp.setHttpMethod(HttpMethod.valueOf((String) httpMap.get("httpMethod")));
         hp.setPath(((String) httpMap.get("path")));
+
         String version = (String) httpMap.get("version");
         switch (version) {
             case "1.0":
-                String versionString1 = "one_zero";
-                httpVersion = HttpVersion.valueOf(versionString1);
+                hp.setHttpVersion(HttpVersion.valueOf("onePointZero"));
                 break;
             case "1.1":
-                String versionString2 = "one_one";
-                httpVersion = HttpVersion.valueOf(versionString2);
+                hp.setHttpVersion(HttpVersion.valueOf("onePointOne"));
                 break;
             case "2.0":
-                String versionString3 = "two_zero";
-                httpVersion = HttpVersion.valueOf(versionString3);
+                hp.setHttpVersion(HttpVersion.valueOf("twoPointZero"));
                 break;
         }
         hp.setHost((String) httpMap.get("Host"));
         hp.setPragma((String) httpMap.get("Pragma"));
         hp.setCacheControl((String) httpMap.get("Cache-Control"));
         hp.setUserAgent((String) httpMap.get("User-Agent"));
-        hp.setAcceptMiddle((String) httpMap.get("Accept"));
+        String acceptMiddle = (String) httpMap.get("Accept");
         hp.setSecFetchSite((String) httpMap.get("Sec-Fetch-Site"));
         hp.setSecFetchMode((String) httpMap.get("Sec-Fetch-Mode"));
         hp.setReferer((String) httpMap.get("Referer"));
-        hp.setAcceptEncodingMiddle((String) httpMap.get("Accept-Encoding"));
-        hp.setAcceptLanguageMiddle((String) httpMap.get("Accept-Language"));
+        String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
+        String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
+
 
         //acceptLanguage分割
-        if (StringUtil.isBlank(hp.getAcceptLanguageMiddle())) {
-            return null;
+        if (StringUtil.isBlank(acceptLanguageMiddle)) {
+        } else {
+            List<ContentAndQuality> contentAndQualityAcceptLanguageList;
+            List<AcceptLanguage> acceptLanguageList = new ArrayList();
+            contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
+            AcceptLanguage acceptLanguage = new AcceptLanguage();
+            for (int i = 0; i < contentAndQualityAcceptLanguageList.size(); i++) {
+                acceptLanguage.setContent(contentAndQualityAcceptLanguageList.get(i).getContent());
+                acceptLanguage.setQuality(contentAndQualityAcceptLanguageList.get(i).getQuality());
+                acceptLanguageList.add(acceptLanguage);
+            }
+            hp.setAcceptLanguage(acceptLanguageList);
         }
-        contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(hp.getAcceptLanguageMiddle());
-
 
         //AcceptEncoding分割
-        if (StringUtil.isBlank(hp.getAcceptEncodingMiddle())) {
-            return null;
+        if (StringUtil.isBlank(acceptEncodingMiddle)) {
+        } else {
+            List<ContentAndQuality> contentAndQualityAcceptEncodingList;
+            List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
+            contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
+            AcceptEncoding acceptEncoding = new AcceptEncoding();
+            for (int i = 0; i < contentAndQualityAcceptEncodingList.size(); i++) {
+                acceptEncoding.setContent(contentAndQualityAcceptEncodingList.get(i).getContent());
+                acceptEncoding.setQuality(contentAndQualityAcceptEncodingList.get(i).getQuality());
+                acceptEncodingList.add(acceptEncoding);
+            }
+            hp.setAcceptEncoding(acceptEncodingList);
         }
-        contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(hp.getAcceptEncodingMiddle());
-
 
         //accept分割
-        if (StringUtil.isBlank(hp.getAcceptMiddle())) {
-            return null;
+        if (StringUtil.isBlank(acceptMiddle)) {
+        } else {
+            List<ContentAndQuality> contentAndQualityAcceptList;
+            List<Accept> acceptList = new RinaArrayList<>();
+            contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
+            Accept accept = new Accept();
+
+            for (int i = 0; i < contentAndQualityAcceptList.size(); i++) {
+                accept.setContent(contentAndQualityAcceptList.get(i).getContent());
+                accept.setQuality(contentAndQualityAcceptList.get(i).getQuality());
+                acceptList.add(accept);
+            }
+            hp.setAccept(acceptList);
         }
-        contentAndQualityAcceptList = resolve2ContentAndQuality(hp.getAcceptMiddle());
         return hp;
     }
 
@@ -109,4 +128,5 @@ public class HttpMessageResolver {
                 .collect(Collectors.toList());
     }
 }
+
 

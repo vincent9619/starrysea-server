@@ -3,6 +3,7 @@ package top.starrysea.rina.core.connection;
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.core.annotation.RinaWired;
+import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.string.StringUtil;
@@ -107,6 +108,10 @@ public class HttpNIO {
                     List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
                     requestContent.stream().forEach(log::info);
                     httpMessageResolver.handleRun(requestContent);
+                    log.info(String.valueOf(httpMessageResolver.contentAndQualityAcceptLanguageList));
+                    log.info(String.valueOf(httpMessageResolver.contentAndQualityAcceptEncodingList));
+                    log.info(String.valueOf(httpMessageResolver.contentAndQualityAcceptList));
+                    log.info(String.valueOf(httpMessageResolver.httpMethod));
 
 
                     // 返回客户端

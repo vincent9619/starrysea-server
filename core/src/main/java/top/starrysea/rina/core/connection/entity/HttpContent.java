@@ -20,14 +20,12 @@ public class HttpContent {
     private String cacheControl;
     private String userAgent;
     private String acceptMiddle;
-    private List<Accept> accepts;
     private String secFetchSite;
     private String secFetchMode;
     private String referer;
     private String acceptEncodingMiddle;
-    private List<String> acceptEncoding;
     private String acceptLanguageMiddle;
-    private List<AcceptLanguage> acceptLanguages;
+
 
 
 }

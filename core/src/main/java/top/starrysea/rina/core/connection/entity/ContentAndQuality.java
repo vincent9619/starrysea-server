@@ -7,4 +7,5 @@ public class ContentAndQuality {
 
     private String content;
     private Double quality;
+
 }

@@ -5,6 +5,7 @@ import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.core.connection.entity.ContentAndQuality;
 import top.starrysea.rina.core.connection.entity.HttpContent;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
+import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 import top.starrysea.rina.util.collection.RinaArrayList;
 import top.starrysea.rina.util.string.StringUtil;
 
@@ -14,12 +15,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @RinaObject
 public class HttpMessageResolver {
-
-
-    List<ContentAndQuality> contentAndQualityAcceptLanguageList = new RinaArrayList<>();
-    List<ContentAndQuality> contentAndQualityAcceptEncodingList = new RinaArrayList<>();
-    List<ContentAndQuality> contentAndQualityAcceptList = new RinaArrayList<>();
-    HttpMethod httpMethod;
+    private List<ContentAndQuality> contentAndQualityAcceptLanguageList = new RinaArrayList<>();
+    private List<ContentAndQuality> contentAndQualityAcceptEncodingList = new RinaArrayList<>();
+    private List<ContentAndQuality> contentAndQualityAcceptList = new RinaArrayList<>();
+    private HttpMethod httpMethod;
+    private HttpVersion httpVersion;
 
 
     public HttpContent handleRun(List<String> serverReport) {
@@ -41,13 +41,25 @@ public class HttpMessageResolver {
             String[] midRest = restLine.split(":", 2);
             httpMap.put(midRest[0], midRest[1]);
         }
-
-
         //将属性值传入http
 
         httpMethod = HttpMethod.valueOf((String) httpMap.get("httpMethod"));
         hp.setPath(((String) httpMap.get("path")));
-        hp.setVersion((String) httpMap.get("version"));
+        String version = (String) httpMap.get("version");
+        switch (version) {
+            case "1.0":
+                String versionString1 = "one_zero";
+                httpVersion = HttpVersion.valueOf(versionString1);
+                break;
+            case "1.1":
+                String versionString2 = "one_one";
+                httpVersion = HttpVersion.valueOf(versionString2);
+                break;
+            case "2.0":
+                String versionString3 = "two_zero";
+                httpVersion = HttpVersion.valueOf(versionString3);
+                break;
+        }
         hp.setHost((String) httpMap.get("Host"));
         hp.setPragma((String) httpMap.get("Pragma"));
         hp.setCacheControl((String) httpMap.get("Cache-Control"));
@@ -58,7 +70,6 @@ public class HttpMessageResolver {
         hp.setReferer((String) httpMap.get("Referer"));
         hp.setAcceptEncodingMiddle((String) httpMap.get("Accept-Encoding"));
         hp.setAcceptLanguageMiddle((String) httpMap.get("Accept-Language"));
-
 
         //acceptLanguage分割
         if (StringUtil.isBlank(hp.getAcceptLanguageMiddle())) {

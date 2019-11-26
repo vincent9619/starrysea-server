@@ -6,16 +6,6 @@ import lombok.Data;
 public class AcceptLanguage {
     private Double quality;
     private String content;
-
-
-    public String toString() {
-        return "acceptLanguage{" +
-                "q=" + quality +
-                ", accept='" + content + '\'' +
-                '}';
-    }
-
-
 }
 
 

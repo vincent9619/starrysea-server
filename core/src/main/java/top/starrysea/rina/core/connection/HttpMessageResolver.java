@@ -43,13 +43,13 @@ public class HttpMessageResolver {
         String version = (String) httpMap.get("version");
         switch (version) {
             case "1.0":
-                hp.setHttpVersion(HttpVersion.valueOf("onePointZero"));
+                hp.setHttpVersion(HttpVersion.valueOf("HTTP1"));
                 break;
             case "1.1":
-                hp.setHttpVersion(HttpVersion.valueOf("onePointOne"));
+                hp.setHttpVersion(HttpVersion.valueOf("HTTP1_1"));
                 break;
             case "2.0":
-                hp.setHttpVersion(HttpVersion.valueOf("twoPointZero"));
+                hp.setHttpVersion(HttpVersion.valueOf("HTTP2"));
                 break;
         }
         hp.setHost((String) httpMap.get("Host"));
@@ -63,48 +63,46 @@ public class HttpMessageResolver {
         String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
         String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
 
-
         //acceptLanguage分割
-        if (StringUtil.isBlank(acceptLanguageMiddle)) {
-        } else {
+        if (StringUtil.isNotBlank(acceptLanguageMiddle)) {
             List<ContentAndQuality> contentAndQualityAcceptLanguageList;
-            List<AcceptLanguage> acceptLanguageList = new ArrayList();
+            List<AcceptLanguage> acceptLanguageList = new RinaArrayList<>();
             contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
-            AcceptLanguage acceptLanguage = new AcceptLanguage();
-            for (int i = 0; i < contentAndQualityAcceptLanguageList.size(); i++) {
-                acceptLanguage.setContent(contentAndQualityAcceptLanguageList.get(i).getContent());
-                acceptLanguage.setQuality(contentAndQualityAcceptLanguageList.get(i).getQuality());
+
+            for (ContentAndQuality contentAndQualityAcceptLanguage : contentAndQualityAcceptLanguageList) {
+                AcceptLanguage acceptLanguage = new AcceptLanguage();
+                acceptLanguage.setContent(contentAndQualityAcceptLanguage.getContent());
+                acceptLanguage.setQuality(contentAndQualityAcceptLanguage.getQuality());
                 acceptLanguageList.add(acceptLanguage);
             }
             hp.setAcceptLanguage(acceptLanguageList);
         }
 
         //AcceptEncoding分割
-        if (StringUtil.isBlank(acceptEncodingMiddle)) {
-        } else {
+        if (StringUtil.isNotBlank(acceptEncodingMiddle)) {
             List<ContentAndQuality> contentAndQualityAcceptEncodingList;
             List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
             contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
-            AcceptEncoding acceptEncoding = new AcceptEncoding();
-            for (int i = 0; i < contentAndQualityAcceptEncodingList.size(); i++) {
-                acceptEncoding.setContent(contentAndQualityAcceptEncodingList.get(i).getContent());
-                acceptEncoding.setQuality(contentAndQualityAcceptEncodingList.get(i).getQuality());
+
+            for (ContentAndQuality contentAndQualityAcceptEncoding : contentAndQualityAcceptEncodingList) {
+                AcceptEncoding acceptEncoding = new AcceptEncoding();
+                acceptEncoding.setContent(contentAndQualityAcceptEncoding.getContent());
+                acceptEncoding.setQuality(contentAndQualityAcceptEncoding.getQuality());
                 acceptEncodingList.add(acceptEncoding);
             }
             hp.setAcceptEncoding(acceptEncodingList);
         }
 
         //accept分割
-        if (StringUtil.isBlank(acceptMiddle)) {
-        } else {
+        if (StringUtil.isNotBlank(acceptMiddle)) {
             List<ContentAndQuality> contentAndQualityAcceptList;
             List<Accept> acceptList = new RinaArrayList<>();
             contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
-            Accept accept = new Accept();
 
-            for (int i = 0; i < contentAndQualityAcceptList.size(); i++) {
-                accept.setContent(contentAndQualityAcceptList.get(i).getContent());
-                accept.setQuality(contentAndQualityAcceptList.get(i).getQuality());
+            for (ContentAndQuality contentAndQualityAccept : contentAndQualityAcceptList) {
+                Accept accept = new Accept();
+                accept.setContent(contentAndQualityAccept.getContent());
+                accept.setQuality(contentAndQualityAccept.getQuality());
                 acceptList.add(accept);
             }
             hp.setAccept(acceptList);

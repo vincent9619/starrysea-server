@@ -7,6 +7,7 @@ import org.reflections.util.ConfigurationBuilder;
 import top.starrysea.rina.core.annotation.RinaController;
 import top.starrysea.rina.core.annotation.RinaGet;
 import top.starrysea.rina.core.annotation.RinaPost;
+import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
@@ -44,13 +45,13 @@ public class InitRouter {
 			RinaRequestRouteInfo routeInfo = new RinaRequestRouteInfo();
 			if (annotation == RinaGet.class) {
 				RinaGet getObject = method.getAnnotation(RinaGet.class);
-				requestInfo.setHttpMethod("get");
+				requestInfo.setHttpMethod(HttpMethod.GET);
 				requestInfo.setPath(getObject.value());
 				routeInfo.setMethod(method);
 				requestMapping.registerRouteInfo(requestInfo, routeInfo);
 			} else if (annotation == RinaPost.class) {
 				RinaPost postObject = method.getAnnotation(RinaPost.class);
-				requestInfo.setHttpMethod("post");
+				requestInfo.setHttpMethod(HttpMethod.POST);
 				requestInfo.setPath(postObject.value());
 				routeInfo.setMethod(method);
 				requestMapping.registerRouteInfo(requestInfo, routeInfo);

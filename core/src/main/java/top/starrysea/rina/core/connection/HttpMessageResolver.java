@@ -65,9 +65,8 @@ public class HttpMessageResolver {
 
         //acceptLanguage分割
         if (StringUtil.isNotBlank(acceptLanguageMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptLanguageList;
+            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
             List<AcceptLanguage> acceptLanguageList = new RinaArrayList<>();
-            contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
 
             for (ContentAndQuality contentAndQualityAcceptLanguage : contentAndQualityAcceptLanguageList) {
                 AcceptLanguage acceptLanguage = new AcceptLanguage();
@@ -80,9 +79,9 @@ public class HttpMessageResolver {
 
         //AcceptEncoding分割
         if (StringUtil.isNotBlank(acceptEncodingMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptEncodingList;
+            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
+            ;
             List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
-            contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
 
             for (ContentAndQuality contentAndQualityAcceptEncoding : contentAndQualityAcceptEncodingList) {
                 AcceptEncoding acceptEncoding = new AcceptEncoding();
@@ -95,9 +94,8 @@ public class HttpMessageResolver {
 
         //accept分割
         if (StringUtil.isNotBlank(acceptMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptList;
+            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
             List<Accept> acceptList = new RinaArrayList<>();
-            contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
 
             for (ContentAndQuality contentAndQualityAccept : contentAndQualityAcceptList) {
                 Accept accept = new Accept();

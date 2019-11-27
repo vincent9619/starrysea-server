@@ -32,7 +32,15 @@ public class HttpRequestResolver {
 					String value = parameterMap.get(key);
 					if (value != null) {
 						field.setAccessible(true);
-						field.set(controllerMethodInArg, field.getType().cast(value));
+						if (field.getType() == int.class) {
+							field.set(controllerMethodInArg, Integer.parseInt(value));
+						} else if (field.getType() == short.class) {
+							field.set(controllerMethodInArg, Short.parseShort(value));
+						} else if (field.getType() == long.class) {
+							field.set(controllerMethodInArg, Long.parseLong(value));
+						} else if (field.getType() == String.class) {
+							field.set(controllerMethodInArg, value);
+						}
 					}
 				}
 				controllerMethodInArgValueList.add(controllerMethodInArg);

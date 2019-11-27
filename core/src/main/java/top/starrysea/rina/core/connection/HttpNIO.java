@@ -6,7 +6,6 @@ import top.starrysea.rina.core.annotation.RinaWired;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.string.StringUtil;
-import top.starrysea.rina.util.thread.ThreadUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -48,7 +47,11 @@ public class HttpNIO {
                 while (it.hasNext()) {
                     SelectionKey Key = it.next();
                     log.info("开始建立与客户端连接");
-                    ThreadUtil.exec(() -> httpHandler(Key));
+                    try {
+                        httpHandler(Key);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
                     log.info("结束与客户端连接");
                     it.remove();
                 }
@@ -68,10 +71,10 @@ public class HttpNIO {
         // 编码字符集
         String charset = "UTF-8";
         if (key.isAcceptable()) {
-            ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
+            ServerSocketChannel serverAcceptChannel = (ServerSocketChannel) key.channel();
             // 接收的客户端的连接
             try {
-                SocketChannel channel = serverChannel.accept();
+                SocketChannel channel = serverAcceptChannel.accept();
                 if (channel == null) {
                     return;
                 }
@@ -106,7 +109,7 @@ public class HttpNIO {
                 }
                 List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
                 requestContent.stream().forEach(log::info);
-                httpMessageResolver.handleRun(requestContent);
+                //httpMessageResolver.handleRun(requestContent);
 
 
                 // 返回客户端

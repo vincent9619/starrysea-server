@@ -6,7 +6,6 @@ import lombok.Data;
 public class ServerConfig {
 	private int port;
 	private String basePackage;
-
     private long waitTime ;
 
 }

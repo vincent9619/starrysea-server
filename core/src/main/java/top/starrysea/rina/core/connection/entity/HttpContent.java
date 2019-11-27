@@ -6,6 +6,7 @@ import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class HttpContent {
@@ -23,4 +24,5 @@ public class HttpContent {
     private List<Accept> accept;
     private List<AcceptLanguage> acceptLanguage;
     private List<AcceptEncoding> acceptEncoding;
+    private Map<String, String> formData;
 }

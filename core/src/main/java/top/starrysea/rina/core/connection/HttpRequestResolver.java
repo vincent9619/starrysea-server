@@ -7,8 +7,6 @@ import top.starrysea.rina.core.router.RinaRequestRouteInfo;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ public class HttpRequestResolver {
 		RinaRequestRouteInfo routeInfo = requestMapping.getRouteInfo(requestInfo);
 		Method controllerMethod = routeInfo.getMethod();
 		List<Object> controllerMethodInArgValueList = new ArrayList<>();
-		MethodHandles.Lookup lookup = MethodHandles.lookup();
 		Class<?>[] controllerMethodInArgClasses = controllerMethod.getParameterTypes();
 		try {
 			for (Class<?> aClass : controllerMethodInArgClasses) {
@@ -34,8 +31,8 @@ public class HttpRequestResolver {
 					String key = field.getName();
 					String value = parameterMap.get(key);
 					if (value != null) {
-						MethodHandle methodHandle = lookup.findSetter(aClass, key, field.getType());
-						methodHandle.invoke(controllerMethodInArg, field.getType().cast(value));
+						field.setAccessible(true);
+						field.set(controllerMethodInArg, field.getType().cast(value));
 					}
 				}
 				controllerMethodInArgValueList.add(controllerMethodInArg);

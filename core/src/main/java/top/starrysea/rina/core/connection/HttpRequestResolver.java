@@ -20,24 +20,25 @@ public class HttpRequestResolver {
 		RequestInfo requestInfo = new RequestInfo(httpMethod, path);
 		RinaRequestMapping requestMapping = RinaObjectFactory.getRinaObject(RinaRequestMapping.class);
 		RinaRequestRouteInfo routeInfo = requestMapping.getRouteInfo(requestInfo);
-		Method method = routeInfo.getMethod();
-		List<Object> objects = new ArrayList<>();
-		Class<?>[] classes = method.getParameterTypes();
+		Method controllerMethod = routeInfo.getMethod();
+		List<Object> controllerMethodInArgValueList = new ArrayList<>();
+		MethodHandles.Lookup lookup = MethodHandles.lookup();
+		Class<?>[] controllerMethodInArgClasses = controllerMethod.getParameterTypes();
 		try {
-			for (Class<?> aClass : classes) {
-				Object object = aClass.getConstructor().newInstance();
-				MethodHandles.Lookup lookup = MethodHandles.lookup();
+			for (Class<?> aClass : controllerMethodInArgClasses) {
+				Object controllerMethodInArg = aClass.getConstructor().newInstance();
 				parameterMap.forEach((key, value) -> {
 					try {
 						MethodHandle methodHandle = lookup.findSetter(aClass, key, value.getClass());
-						methodHandle.invoke(object, value);
+						methodHandle.invoke(controllerMethodInArg, value);
 					} catch (Throwable e) {
 						throw new RinaException(e.getMessage(), e);
 					}
 				});
-				objects.add(object);
+				controllerMethodInArgValueList.add(controllerMethodInArg);
 			}
-			return method.invoke(RinaObjectFactory.getRinaObject(method.getDeclaringClass()), objects.toArray());
+			return controllerMethod.invoke(RinaObjectFactory
+					.getRinaObject(controllerMethod.getDeclaringClass()), controllerMethodInArgValueList.toArray());
 		} catch (Throwable e) {
 			throw new RinaException(e.getMessage(), e);
 		}

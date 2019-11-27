@@ -30,18 +30,14 @@ public class HttpRequestResolver {
 			for (Class<?> aClass : controllerMethodInArgClasses) {
 				Object controllerMethodInArg = aClass.getConstructor().newInstance();
 				Field[] argField = aClass.getDeclaredFields();
-				parameterMap.forEach((key, value) -> {
-					try {
-						for (Field field : argField) {
-							if (field.getName().equals(key)) {
-								MethodHandle methodHandle = lookup.findSetter(aClass, key, field.getType());
-								methodHandle.invoke(controllerMethodInArg, field.getType().cast(value));
-							}
-						}
-					} catch (Throwable e) {
-						throw new RinaException(e.getMessage(), e);
+				for (Field field : argField) {
+					String key = field.getName();
+					String value = parameterMap.get(key);
+					if (value != null) {
+						MethodHandle methodHandle = lookup.findSetter(aClass, key, field.getType());
+						methodHandle.invoke(controllerMethodInArg, field.getType().cast(value));
 					}
-				});
+				}
 				controllerMethodInArgValueList.add(controllerMethodInArg);
 			}
 			return controllerMethod.invoke(RinaObjectFactory

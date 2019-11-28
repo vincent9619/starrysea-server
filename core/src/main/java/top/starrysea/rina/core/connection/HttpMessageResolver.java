@@ -3,6 +3,7 @@ package top.starrysea.rina.core.connection;
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.core.connection.entity.*;
+import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 import top.starrysea.rina.util.collection.RinaArrayList;
@@ -30,10 +31,12 @@ public class HttpMessageResolver {
         String[] versionLine = httpBasicInfo[2].split("/");
         httpMap.put("version", versionLine[1]);
 
-        for (int j = 1; j < serverReport.size(); j++) {
+        for (int j = 1; j < serverReport.size() - 1; j++) {
             String restLine = serverReport.get(j);
             String[] midRest = restLine.split(":", 2);
-            httpMap.put(midRest[0], midRest[1]);
+            if (StringUtil.isNotBlank(midRest[0]) && StringUtil.isNotBlank(midRest[1])) {
+                httpMap.put(midRest[0], midRest[1]);
+            }
         }
 
         //将属性值传入http
@@ -52,16 +55,41 @@ public class HttpMessageResolver {
                 hp.setHttpVersion(HttpVersion.valueOf("HTTP2"));
                 break;
         }
+
+
+        String type = (String) httpMap.get("Content-Type");
+        switch (type) {
+            case "application/x-www-form-urlencoded":
+                hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
+                break;
+        }
+
+
         hp.setHost((String) httpMap.get("Host"));
         hp.setPragma((String) httpMap.get("Pragma"));
         hp.setCacheControl((String) httpMap.get("Cache-Control"));
         hp.setUserAgent((String) httpMap.get("User-Agent"));
-        String acceptMiddle = (String) httpMap.get("Accept");
         hp.setSecFetchSite((String) httpMap.get("Sec-Fetch-Site"));
         hp.setSecFetchMode((String) httpMap.get("Sec-Fetch-Mode"));
         hp.setReferer((String) httpMap.get("Referer"));
+        String contentLength = (String) httpMap.get("Content-Length");
+        hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
+        hp.setOrigin((String) httpMap.get("Origin"));
+        String acceptMiddle = (String) httpMap.get("Accept");
         String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
         String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
+
+        //PostContent分割
+        if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
+            String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
+            Map<String, String> formData = new HashMap<>();
+            for (String postContentSaveContent : postContentSave) {
+                String[] postContentSplit = postContentSaveContent.split("=");
+                formData.put(postContentSplit[0], postContentSplit[1]);
+            }
+            hp.setFormData(formData);
+        }
+
 
         //acceptLanguage分割
         if (StringUtil.isNotBlank(acceptLanguageMiddle)) {

@@ -2,6 +2,7 @@ package top.starrysea.rina.core.connection.entity;
 
 
 import lombok.Data;
+import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 
@@ -23,4 +24,10 @@ public class HttpContent {
     private List<Accept> accept;
     private List<AcceptLanguage> acceptLanguage;
     private List<AcceptEncoding> acceptEncoding;
+    private HttpContentType httpContentType;
+    private List<PostContent> postContent;
+    private int contentLength;
+    private String origin;
+    private String postmanToken;
+
 }

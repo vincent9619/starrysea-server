@@ -113,6 +113,7 @@ public class HttpNIO {
                 requestContent.stream().forEach(log::info);
                 httpMessageResolver.handleRun(requestContent);
 
+
                 // 返回客户端
                 StringBuilder sendMsg = new StringBuilder();
                 sendMsg.append("HTTP/1.1 200 OK\r\n");// 响应行
@@ -134,7 +135,6 @@ public class HttpNIO {
                 buffer = ByteBuffer.wrap(sendMsg.toString().getBytes(charset));
                 // 发送
                 channel.write(buffer);
-                channel.close();
 
 
             } catch (IOException ex) {

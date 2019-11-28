@@ -60,7 +60,7 @@ public class HttpMessageResolver {
         String type = (String) httpMap.get("Content-Type");
         switch (type) {
             case "application/x-www-form-urlencoded":
-                hp.setHttpContentType(HttpContentType.valueOf("applicationX_www_form_urlencoded"));
+                hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
                 break;
         }
 
@@ -75,7 +75,6 @@ public class HttpMessageResolver {
         String contentLength = (String) httpMap.get("Content-Length");
         hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
         hp.setOrigin((String) httpMap.get("Origin"));
-        hp.setPostmanToken((String) httpMap.get("Postman-Token"));
         String acceptMiddle = (String) httpMap.get("Accept");
         String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
         String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
@@ -83,12 +82,12 @@ public class HttpMessageResolver {
         //PostContent分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
             String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
-            Map<String, String> postContent = new HashMap<>();
+            Map<String, String> formData = new HashMap<>();
             for (String postContentSaveContent : postContentSave) {
                 String[] postContentSplit = postContentSaveContent.split("=");
-                postContent.put(postContentSplit[0], postContentSplit[1]);
+                formData.put(postContentSplit[0], postContentSplit[1]);
             }
-            hp.setFormData(postContent);
+            hp.setFormData(formData);
         }
 
 

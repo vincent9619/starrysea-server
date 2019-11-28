@@ -28,6 +28,5 @@ public class HttpContent {
     private HttpContentType httpContentType;
     private int contentLength;
     private String origin;
-    private String postmanToken;
     private Map<String, String> formData;
 }

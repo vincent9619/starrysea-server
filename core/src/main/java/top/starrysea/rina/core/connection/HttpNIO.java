@@ -112,7 +112,6 @@ public class HttpNIO {
                 List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
                 requestContent.stream().forEach(log::info);
                 httpMessageResolver.handleRun(requestContent);
-                log.info(String.valueOf( httpMessageResolver.handleRun(requestContent).getFormData()));
 
                 // 返回客户端
                 StringBuilder sendMsg = new StringBuilder();

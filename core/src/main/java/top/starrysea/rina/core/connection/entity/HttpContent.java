@@ -7,6 +7,7 @@ import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.connection.entity.enums.HttpVersion;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class HttpContent {
@@ -30,4 +31,5 @@ public class HttpContent {
     private String origin;
     private String postmanToken;
 
+    private Map<String, String> formData;
 }

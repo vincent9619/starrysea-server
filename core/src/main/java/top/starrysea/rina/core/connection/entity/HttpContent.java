@@ -26,10 +26,8 @@ public class HttpContent {
     private List<AcceptLanguage> acceptLanguage;
     private List<AcceptEncoding> acceptEncoding;
     private HttpContentType httpContentType;
-    private List<PostContent> postContent;
     private int contentLength;
     private String origin;
     private String postmanToken;
-
     private Map<String, String> formData;
 }

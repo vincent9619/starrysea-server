@@ -83,15 +83,12 @@ public class HttpMessageResolver {
         //PostContent分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
             String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
-            List<PostContent> PostContentList = new RinaArrayList<>();
-            for (int i = 0; i < postContentSave.length; i++) {
-                PostContent postContent = new PostContent();
-                String[] postContentSplit = postContentSave[i].split("=");
-                postContent.setName(postContentSplit[0]);
-                postContent.setContent(postContentSplit[1]);
-                PostContentList.add(postContent);
+            Map<String, String> postContent = new HashMap<>();
+            for (String postContentSaveContent : postContentSave) {
+                String[] postContentSplit = postContentSaveContent.split("=");
+                postContent.put(postContentSplit[0], postContentSplit[1]);
             }
-            hp.setPostContent(PostContentList);
+            hp.setFormData(postContent);
         }
 
 

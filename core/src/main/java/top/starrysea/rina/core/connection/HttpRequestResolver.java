@@ -1,6 +1,7 @@
 package top.starrysea.rina.core.connection;
 
 import top.starrysea.rina.core.connection.entity.HttpContent;
+import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
@@ -21,7 +22,7 @@ public class HttpRequestResolver {
 		RinaRequestMapping requestMapping = RinaObjectFactory.getRinaObject(RinaRequestMapping.class);
 		RinaRequestRouteInfo routeInfo = requestMapping.getRouteInfo(requestInfo);
 		if (routeInfo == null) {
-			throw new RinaException("路径" + httpContent.getPath() + "的" + httpContent.getHttpMethod().name() + "方法没有对应的路由");
+			routeInfo = requestMapping.getRouteInfo(new RequestInfo(HttpMethod.GET, "/error/404"));
 		}
 		Method controllerMethod = routeInfo.getMethod();
 		List<Object> controllerMethodInArgValueList = new ArrayList<>();

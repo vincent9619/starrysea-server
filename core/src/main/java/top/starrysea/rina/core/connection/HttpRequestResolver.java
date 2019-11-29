@@ -1,6 +1,7 @@
 package top.starrysea.rina.core.connection;
 
 import top.starrysea.rina.core.connection.entity.HttpContent;
+import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
@@ -20,6 +21,9 @@ public class HttpRequestResolver {
 		Map<String, String> parameterMap = httpContent.getFormData();
 		RinaRequestMapping requestMapping = RinaObjectFactory.getRinaObject(RinaRequestMapping.class);
 		RinaRequestRouteInfo routeInfo = requestMapping.getRouteInfo(requestInfo);
+		if (routeInfo == null) {
+			routeInfo = requestMapping.getRouteInfo(new RequestInfo(HttpMethod.GET, "/error/404"));
+		}
 		Method controllerMethod = routeInfo.getMethod();
 		List<Object> controllerMethodInArgValueList = new ArrayList<>();
 		Class<?>[] controllerMethodInArgClasses = controllerMethod.getParameterTypes();

@@ -2,12 +2,12 @@ package top.starrysea.rina.core.connection;
 
 import lombok.Data;
 import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
+import top.starrysea.rina.core.connection.entity.enums.HttpStatus;
 
 @Data
 public class HttpResponse {
 
-    private int statusCode;
-    private String codeDescribe;
+    private HttpStatus httpStatus;
     private String cacheControl;
     private String location;
     private String server;
@@ -19,7 +19,7 @@ public class HttpResponse {
 
     public StringBuilder resolve2String() {
         StringBuilder sendMsg = new StringBuilder();
-        sendMsg.append("HTTP/1.1" + this.statusCode + this.codeDescribe +"\r\n")
+        sendMsg.append("HTTP/1.1" + this.httpStatus.toString() +"\r\n")
                .append("cache-control:" +this.cacheControl+ "\r\n")
                 .append("Content-Type:" +this.httpContentType +"\r\n")
                 .append("\r\n")

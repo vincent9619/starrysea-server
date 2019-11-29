@@ -20,6 +20,9 @@ public class HttpRequestResolver {
 		Map<String, String> parameterMap = httpContent.getFormData();
 		RinaRequestMapping requestMapping = RinaObjectFactory.getRinaObject(RinaRequestMapping.class);
 		RinaRequestRouteInfo routeInfo = requestMapping.getRouteInfo(requestInfo);
+		if (routeInfo == null) {
+			throw new RinaException("路径" + httpContent.getPath() + "的" + httpContent.getHttpMethod().name() + "方法没有对应的路由");
+		}
 		Method controllerMethod = routeInfo.getMethod();
 		List<Object> controllerMethodInArgValueList = new ArrayList<>();
 		Class<?>[] controllerMethodInArgClasses = controllerMethod.getParameterTypes();

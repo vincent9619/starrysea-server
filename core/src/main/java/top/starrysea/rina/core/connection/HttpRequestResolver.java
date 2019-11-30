@@ -64,10 +64,11 @@ public class HttpRequestResolver {
 		HttpResponse response = new HttpResponse();
 		response.setHttpStatus(HttpStatus.OK);
 		if (body.getClass() == String.class) {
-			if (body.toString().trim().substring(0, 15).toLowerCase().contains("<!doctype html>"))
+			if (body.toString().trim().substring(0, 15).toLowerCase().contains("<!doctype html>")) {
 				response.setHttpContentType(HttpContentType.TEXT_HTML);
-			else
+			} else {
 				response.setHttpContentType(HttpContentType.TEXT_PLAIN);
+			}
 			response.setResponseContent(body.toString());
 		} else {
 			response.setHttpContentType(HttpContentType.APPLICATION_JSON);

@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class HttpRequestResolver {
 
-	public Object resolve(HttpContent httpContent) {
+	public static HttpResponse resolve(HttpContent httpContent) {
 		RequestInfo requestInfo = new RequestInfo(httpContent.getHttpMethod(), httpContent.getPath());
 		Map<String, String> parameterMap = httpContent.getFormData();
 		RinaRequestMapping requestMapping = RinaObjectFactory.getRinaObject(RinaRequestMapping.class);
@@ -49,7 +49,7 @@ public class HttpRequestResolver {
 				}
 				controllerMethodInArgValueList.add(controllerMethodInArg);
 			}
-			return controllerMethod.invoke(RinaObjectFactory
+			return (HttpResponse) controllerMethod.invoke(RinaObjectFactory
 					.getRinaObject(controllerMethod.getDeclaringClass()), controllerMethodInArgValueList.toArray());
 		} catch (Throwable e) {
 			throw new RinaException(e.getMessage(), e);

@@ -2,17 +2,11 @@ package top.starrysea.rina.core.controller;
 
 import top.starrysea.rina.core.annotation.RinaController;
 import top.starrysea.rina.core.annotation.RinaGet;
-import top.starrysea.rina.core.connection.HttpResponse;
-import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
-import top.starrysea.rina.core.connection.entity.enums.HttpStatus;
 
 @RinaController
 public class ErrorController {
 	@RinaGet("/error/404")
-	public HttpResponse notFound() {
-		HttpResponse response = new HttpResponse();
-		response.setHttpStatus(HttpStatus.NOT_FOUND);
-		response.setHttpContentType(HttpContentType.TEXT_HTML);
+	public String notFound() {
 		String s = """
 				            <!DOCTYPE html>
 				            <html lang="zh">
@@ -53,7 +47,6 @@ public class ErrorController {
 				            </body>
 				            </html>
 				""";
-		response.setResponseContent(s);
-		return response;
+		return s;
 	}
 }

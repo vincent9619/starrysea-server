@@ -9,6 +9,7 @@ import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
+import top.starrysea.rina.util.json.JSONUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -70,7 +71,7 @@ public class HttpRequestResolver {
 			response.setResponseContent(body.toString());
 		} else {
 			response.setHttpContentType(HttpContentType.APPLICATION_JSON);
-			// TODO: add object to json method
+			response.setResponseContent(JSONUtil.toStr(body));
 		}
 		return response;
 	}

@@ -2,8 +2,10 @@ package top.starrysea.rina.util.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.exception.RinaException;
 
+@Slf4j
 public class JSONUtil {
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
@@ -26,7 +28,7 @@ public class JSONUtil {
 
     public static void prettyPrint(Object object) {
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+            log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object));
         } catch (JsonProcessingException e) {
             throw new RinaException(e.getMessage(), e);
         }

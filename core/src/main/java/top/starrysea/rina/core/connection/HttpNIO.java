@@ -3,6 +3,7 @@ package top.starrysea.rina.core.connection;
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaObject;
 import top.starrysea.rina.core.annotation.RinaWired;
+import top.starrysea.rina.core.connection.entity.HttpContent;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.string.StringUtil;
@@ -111,11 +112,11 @@ public class HttpNIO {
                 }
                 List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
                 requestContent.stream().forEach(log::info);
-                httpMessageResolver.handleRun(requestContent);
+                HttpContent httpContent = httpMessageResolver.handleRun(requestContent);
 
 
                 // 返回客户端
-                HttpResponse httpResponse = new HttpResponse();
+                HttpResponse httpResponse = HttpRequestResolver.resolve(httpContent);
                 buffer = ByteBuffer.wrap(httpResponse.resolve2String().toString().getBytes(charset));  //在此处测试
                 // 发送
                 channel.write(buffer);

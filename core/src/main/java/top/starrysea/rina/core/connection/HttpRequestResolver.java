@@ -1,7 +1,9 @@
 package top.starrysea.rina.core.connection;
 
 import top.starrysea.rina.core.connection.entity.HttpContent;
+import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
+import top.starrysea.rina.core.connection.entity.enums.HttpStatus;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
 import top.starrysea.rina.core.router.RinaRequestRouteInfo;
@@ -49,10 +51,27 @@ public class HttpRequestResolver {
 				}
 				controllerMethodInArgValueList.add(controllerMethodInArg);
 			}
-			return (HttpResponse) controllerMethod.invoke(RinaObjectFactory
+			Object body = controllerMethod.invoke(RinaObjectFactory
 					.getRinaObject(controllerMethod.getDeclaringClass()), controllerMethodInArgValueList.toArray());
+			return generateResponse(body);
 		} catch (Throwable e) {
 			throw new RinaException(e.getMessage(), e);
 		}
+	}
+
+	private static HttpResponse generateResponse(Object body) {
+		HttpResponse response = new HttpResponse();
+		response.setHttpStatus(HttpStatus.OK);
+		if (body.getClass() == String.class) {
+			if (body.toString().trim().substring(0, 15).toLowerCase().contains("<!doctype html>"))
+				response.setHttpContentType(HttpContentType.TEXT_HTML);
+			else
+				response.setHttpContentType(HttpContentType.TEXT_PLAIN);
+			response.setResponseContent(body.toString());
+		} else {
+			response.setHttpContentType(HttpContentType.APPLICATION_JSON);
+			// TODO: add object to json method
+		}
+		return response;
 	}
 }

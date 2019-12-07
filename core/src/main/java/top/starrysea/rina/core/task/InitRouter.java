@@ -4,9 +4,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import top.starrysea.rina.core.annotation.RinaController;
-import top.starrysea.rina.core.annotation.RinaGet;
-import top.starrysea.rina.core.annotation.RinaPost;
+import top.starrysea.rina.core.annotation.*;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;
@@ -30,6 +28,8 @@ public class InitRouter {
 					.setUrls(ClasspathHelper.forClass(aClass)).setScanners(new MethodAnnotationsScanner()));
 			registerMethod(methodReflections, RinaGet.class);
 			registerMethod(methodReflections, RinaPost.class);
+			registerMethod(methodReflections, RinaPut.class);
+			registerMethod(methodReflections, RinaDelete.class);
 		});
 
 		try {
@@ -53,6 +53,18 @@ public class InitRouter {
 				RinaPost postObject = method.getAnnotation(RinaPost.class);
 				requestInfo.setHttpMethod(HttpMethod.POST);
 				requestInfo.setPath(postObject.value());
+				routeInfo.setMethod(method);
+				requestMapping.registerRouteInfo(requestInfo, routeInfo);
+			} else if (annotation == RinaPut.class) {
+				RinaPut putObject = method.getAnnotation(RinaPut.class);
+				requestInfo.setHttpMethod(HttpMethod.PUT);
+				requestInfo.setPath(putObject.value());
+				routeInfo.setMethod(method);
+				requestMapping.registerRouteInfo(requestInfo, routeInfo);
+			} else if (annotation == RinaDelete.class) {
+				RinaDelete deleteObject = method.getAnnotation(RinaDelete.class);
+				requestInfo.setHttpMethod(HttpMethod.DELETE);
+				requestInfo.setPath(deleteObject.value());
 				routeInfo.setMethod(method);
 				requestMapping.registerRouteInfo(requestInfo, routeInfo);
 			}

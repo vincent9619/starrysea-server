@@ -36,11 +36,16 @@ public class HttpRequestResolver {
 		try {
 			if (annotations != null && annotations.length != 0) {
 				int classIndex = 0;
+				boolean isAnnotationUsed = false;
 				for (Annotation[] annotationsPerMethod : annotations) {
 					for (Annotation annotationOfOneMethod : annotationsPerMethod) {
 						if (annotationOfOneMethod instanceof RinaBody) {
+							if (isAnnotationUsed) {
+								throw new RinaException("每个方法参数中不能出现多于1个的 RinaBody 注解");
+							}
 							Object controllerMethodInArg = JSONUtil.toObject(parameterMap.get("jsonObject"), controllerMethodInArgClasses[classIndex]);
 							controllerMethodInArgValueList.add(controllerMethodInArg);
+							isAnnotationUsed=true;
 							controllerMethodInArgClasses[classIndex] = null;
 						}
 					}

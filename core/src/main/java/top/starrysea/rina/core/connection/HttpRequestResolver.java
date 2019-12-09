@@ -1,5 +1,6 @@
 package top.starrysea.rina.core.connection;
 
+import top.starrysea.rina.core.annotation.RinaBody;
 import top.starrysea.rina.core.connection.entity.HttpContent;
 import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
@@ -11,6 +12,7 @@ import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.json.JSONUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -30,8 +32,30 @@ public class HttpRequestResolver {
 		Method controllerMethod = routeInfo.getMethod();
 		List<Object> controllerMethodInArgValueList = new ArrayList<>();
 		Class<?>[] controllerMethodInArgClasses = controllerMethod.getParameterTypes();
+		Annotation[][] annotations = controllerMethod.getParameterAnnotations();
 		try {
+			if (annotations != null && annotations.length != 0) {
+				int classIndex = 0;
+				boolean isAnnotationUsed = false;
+				for (Annotation[] annotationsPerMethod : annotations) {
+					for (Annotation annotationOfOneMethod : annotationsPerMethod) {
+						if (annotationOfOneMethod instanceof RinaBody) {
+							if (isAnnotationUsed) {
+								throw new RinaException("每个方法参数中不能出现多于1个的 RinaBody 注解");
+							}
+							Object controllerMethodInArg = JSONUtil.toObject(parameterMap.get("jsonObject"), controllerMethodInArgClasses[classIndex]);
+							controllerMethodInArgValueList.add(controllerMethodInArg);
+							isAnnotationUsed=true;
+							controllerMethodInArgClasses[classIndex] = null;
+						}
+					}
+					classIndex++;
+				}
+			}
 			for (Class<?> aClass : controllerMethodInArgClasses) {
+				if (aClass == null) {
+					continue;
+				}
 				Object controllerMethodInArg = aClass.getConstructor().newInstance();
 				Field[] argField = aClass.getDeclaredFields();
 				for (Field field : argField) {

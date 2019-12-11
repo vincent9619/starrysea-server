@@ -44,14 +44,14 @@ public class HttpMessageResolver {
         }
 
         //将属性值传入http
-        String httpMethodSave = (String) httpMap.get("httpMethod");
-        if (StringUtil.isNotBlank(httpMethodSave)) {
-            hp.setHttpMethod(HttpMethod.valueOf(httpMethodSave));
+        String httpMethod = (String) httpMap.get("httpMethod");
+        if (StringUtil.isNotBlank(httpMethod)) {
+            hp.setHttpMethod(HttpMethod.valueOf(httpMethod));
         }
 
-        String pathSave = (String) httpMap.get("path");
-        if (StringUtil.isNotBlank(pathSave)) {
-            hp.setPath(pathSave);
+        String path = (String) httpMap.get("path");
+        if (StringUtil.isNotBlank(path)) {
+            hp.setPath(path);
         }
 
         if (StringUtil.isNotBlank(((String) httpMap.get("version")))) {
@@ -77,15 +77,14 @@ public class HttpMessageResolver {
             switch (type) {
                 case "application/x-www-form-urlencoded":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
-                    if (StringUtil.isNotBlank(type)) {
-                        String[] postContentSave = bodyContent[1].split("&");
-                        Map<String, String> formData = new HashMap<>();
-                        for (String postContentSaveContent : postContentSave) {
-                            String[] postContentSplit = postContentSaveContent.split("=");
-                            formData.put(postContentSplit[0], postContentSplit[1]);
-                        }
-                        hp.setFormData(formData);
+                    String[] postContentSave = bodyContent[1].split("&");
+                    Map<String, String> formData = new HashMap<>();
+                    for (String postContentSaveContent : postContentSave) {
+                        String[] postContentSplit = postContentSaveContent.split("=");
+                        formData.put(postContentSplit[0], postContentSplit[1]);
                     }
+                    hp.setFormData(formData);
+
                     break;
                 case "application/json":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_JSON"));
@@ -115,8 +114,8 @@ public class HttpMessageResolver {
 
         //acceptLanguage分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Language")))) {
-            String acceptLanguageSave = (String) httpMap.get("Accept-Language");
-            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageSave);
+            String acceptLanguageStr = (String) httpMap.get("Accept-Language");
+            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageStr);
             List<AcceptLanguage> acceptLanguageList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAcceptLanguage : contentAndQualityAcceptLanguageList) {
@@ -130,8 +129,8 @@ public class HttpMessageResolver {
 
         //AcceptEncoding分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Encoding")))) {
-            String acceptEncodingSave = (String) httpMap.get("Accept-Encoding");
-            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingSave);
+            String acceptEncodingStr = (String) httpMap.get("Accept-Encoding");
+            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingStr);
             ;
             List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
 
@@ -146,8 +145,8 @@ public class HttpMessageResolver {
 
         //accept分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept")))) {
-            String acceptSave = (String) httpMap.get("Accept");
-            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptSave);
+            String acceptStr = (String) httpMap.get("Accept");
+            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptStr);
             List<Accept> acceptList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAccept : contentAndQualityAcceptList) {

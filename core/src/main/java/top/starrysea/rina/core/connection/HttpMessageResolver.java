@@ -39,7 +39,7 @@ public class HttpMessageResolver {
             String[] midRest = restLine.split(":", 2);
             if (midRest.length == 1) {
             } else if (StringUtil.isNotBlank(midRest[0]) && StringUtil.isNotBlank(midRest[1])) {
-                httpMap.put(midRest[0], midRest[1]);
+                httpMap.put(midRest[0], midRest[1].trim());//有些http客户端会传带空格的body
             }
         }
 
@@ -70,7 +70,7 @@ public class HttpMessageResolver {
         String type = (String) httpMap.get("Content-Type");
         if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
             switch (type) {
-                case " application/x-www-form-urlencoded":
+                case "application/x-www-form-urlencoded":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
                     if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
                         String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
@@ -82,7 +82,7 @@ public class HttpMessageResolver {
                         hp.setFormData(formData);
                     }
                     break;
-                case " application/json":
+                case "application/json":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_JSON"));
                     if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
                         String[] jsonFirstSplit = receiveMessage.split("\\{", 2);

@@ -68,6 +68,7 @@ public class HttpMessageResolver {
 
 
         String type = (String) httpMap.get("Content-Type");
+        type.toLowerCase();
         if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
             switch (type) {
                 case "application/x-www-form-urlencoded":

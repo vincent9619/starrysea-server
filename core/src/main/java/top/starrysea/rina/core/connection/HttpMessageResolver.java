@@ -39,16 +39,19 @@ public class HttpMessageResolver {
             String[] midRest = restLine.split(":", 2);
             if (midRest.length == 1) {
             } else if (StringUtil.isNotBlank(midRest[0]) && StringUtil.isNotBlank(midRest[1])) {
-                httpMap.put(midRest[0], midRest[1].trim());//有些http客户端会传带空格的body
+                httpMap.put(midRest[0], midRest[1]);
             }
         }
 
         //将属性值传入http
-        if (StringUtil.isNotBlank(((String) httpMap.get("httpMethod")))) {
-            hp.setHttpMethod(HttpMethod.valueOf((String) httpMap.get("httpMethod")));
+        String httpMethodSave = (String) httpMap.get("httpMethod");
+        if (StringUtil.isNotBlank(httpMethodSave)) {
+            hp.setHttpMethod(HttpMethod.valueOf(httpMethodSave));
         }
-        if (StringUtil.isNotBlank(((String) httpMap.get("path")))) {
-            hp.setPath(((String) httpMap.get("path")));
+
+        String pathSave = (String) httpMap.get("path");
+        if (StringUtil.isNotBlank(pathSave)) {
+            hp.setPath(pathSave);
         }
 
         if (StringUtil.isNotBlank(((String) httpMap.get("version")))) {
@@ -68,12 +71,12 @@ public class HttpMessageResolver {
 
 
         String type = (String) httpMap.get("Content-Type");
-        type.toLowerCase();
-        if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
+        type = type.trim().toLowerCase();//有些http客户端会传带空格和大小写混合的body
+        if (StringUtil.isNotBlank(type)) {
             switch (type) {
                 case "application/x-www-form-urlencoded":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
-                    if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
+                    if (StringUtil.isNotBlank(type)) {
                         String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
                         Map<String, String> formData = new HashMap<>();
                         for (String postContentSaveContent : postContentSave) {
@@ -85,40 +88,27 @@ public class HttpMessageResolver {
                     break;
                 case "application/json":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_JSON"));
-                    if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
+                    if (StringUtil.isNotBlank(type)) {
                         String[] jsonFirstSplit = receiveMessage.split("\\{", 2);
-                        String jsonContent = "{" + jsonFirstSplit[1];//供元芳调试
+                        String jsonContent = "{" + jsonFirstSplit[1];
+                        hp.setJsonData(jsonContent);
                     }
                     break;
             }
         }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Host")))) {
-            hp.setHost((String) httpMap.get("Host"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Pragma")))) {
-            hp.setPragma((String) httpMap.get("Pragma"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Cache-Control")))) {
-            hp.setCacheControl((String) httpMap.get("Cache-Control"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("User-Agent")))) {
-            hp.setUserAgent((String) httpMap.get("User-Agent"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Sec-Fetch-Site")))) {
-            hp.setSecFetchSite((String) httpMap.get("Sec-Fetch-Site"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Sec-Fetch-Mode")))) {
-            hp.setSecFetchMode((String) httpMap.get("Sec-Fetch-Mode"));
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Referer")))) {
-            hp.setReferer((String) httpMap.get("Referer"));
-        }
+        hp.setHost((String) httpMap.getOrDefault("Host", ""));
+        hp.setPragma((String) httpMap.getOrDefault("Pragma", ""));
+        hp.setCacheControl((String) httpMap.getOrDefault("Cache-Control", ""));
+        hp.setUserAgent((String) httpMap.getOrDefault("User-Agent", ""));
+        hp.setSecFetchSite((String) httpMap.getOrDefault("Sec-Fetch-Site", ""));
+        hp.setSecFetchMode((String) httpMap.getOrDefault("Sec-Fetch-Mode", ""));
+        hp.setReferer((String) httpMap.getOrDefault("Referer", ""));
+        hp.setOrigin((String) httpMap.getOrDefault("Origin", ""));
+
+
         if (StringUtil.isNotBlank(((String) httpMap.get("Referer")))) {
             String contentLength = (String) httpMap.get("Content-Length");
             hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
-        }
-        if (StringUtil.isNotBlank(((String) httpMap.get("Origin")))) {
-            hp.setOrigin((String) httpMap.get("Origin"));
         }
 
 

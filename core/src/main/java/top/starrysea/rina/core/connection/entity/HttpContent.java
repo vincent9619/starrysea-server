@@ -29,5 +29,5 @@ public class HttpContent {
     private int contentLength;
     private String origin;
     private Map<String, String> formData;
-    private Map<String, String> jsonData;
+    private String jsonData;
 }

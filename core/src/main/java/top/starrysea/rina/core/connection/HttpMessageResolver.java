@@ -72,12 +72,13 @@ public class HttpMessageResolver {
 
         String type = (String) httpMap.get("Content-Type");
         type = type.trim().toLowerCase();//有些http客户端会传带空格和大小写混合的body
+        String[] bodyContent = receiveMessage.split("\\r\\n\\r\\n", 2);
         if (StringUtil.isNotBlank(type)) {
             switch (type) {
                 case "application/x-www-form-urlencoded":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
                     if (StringUtil.isNotBlank(type)) {
-                        String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
+                        String[] postContentSave = bodyContent[1].split("&");
                         Map<String, String> formData = new HashMap<>();
                         for (String postContentSaveContent : postContentSave) {
                             String[] postContentSplit = postContentSaveContent.split("=");
@@ -89,13 +90,13 @@ public class HttpMessageResolver {
                 case "application/json":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_JSON"));
                     if (StringUtil.isNotBlank(type)) {
-                        String[] jsonFirstSplit = receiveMessage.split("\\{", 2);
-                        String jsonContent = "{" + jsonFirstSplit[1];
+                        String jsonContent = bodyContent[1];
                         hp.setJsonData(jsonContent);
                     }
                     break;
             }
         }
+
         hp.setHost((String) httpMap.getOrDefault("Host", ""));
         hp.setPragma((String) httpMap.getOrDefault("Pragma", ""));
         hp.setCacheControl((String) httpMap.getOrDefault("Cache-Control", ""));
@@ -114,8 +115,8 @@ public class HttpMessageResolver {
 
         //acceptLanguage分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Language")))) {
-            String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
-            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
+            String acceptLanguageSave = (String) httpMap.get("Accept-Language");
+            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageSave);
             List<AcceptLanguage> acceptLanguageList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAcceptLanguage : contentAndQualityAcceptLanguageList) {
@@ -129,8 +130,8 @@ public class HttpMessageResolver {
 
         //AcceptEncoding分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Encoding")))) {
-            String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
-            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
+            String acceptEncodingSave = (String) httpMap.get("Accept-Encoding");
+            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingSave);
             ;
             List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
 
@@ -145,8 +146,8 @@ public class HttpMessageResolver {
 
         //accept分割
         if (StringUtil.isNotBlank(((String) httpMap.get("Accept")))) {
-            String acceptMiddle = (String) httpMap.get("Accept");
-            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
+            String acceptSave = (String) httpMap.get("Accept");
+            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptSave);
             List<Accept> acceptList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAccept : contentAndQualityAcceptList) {

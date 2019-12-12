@@ -110,9 +110,8 @@ public class HttpNIO {
                 if (StringUtil.isBlank(receiveMessage)) {
                     return;
                 }
-                List<String> requestContent = Arrays.asList(receiveMessage.split("\r\n"));
-                requestContent.stream().forEach(log::info);
-                HttpContent httpContent = httpMessageResolver.handleRun(requestContent);
+                HttpContent httpContent = httpMessageResolver.handleRun(receiveMessage);
+
 
 
                 // 返回客户端

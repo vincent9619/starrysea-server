@@ -17,7 +17,10 @@ import java.util.stream.Collectors;
 public class HttpMessageResolver {
 
 
-    public HttpContent handleRun(List<String> serverReport) {
+    public HttpContent handleRun(String receiveMessage) {
+
+        List<String> serverReport = Arrays.asList(receiveMessage.split("\r\n"));
+        serverReport.stream().forEach(log::info);
 
 
         //第一次分割
@@ -34,66 +37,85 @@ public class HttpMessageResolver {
         for (int j = 1; j < serverReport.size() - 1; j++) {
             String restLine = serverReport.get(j);
             String[] midRest = restLine.split(":", 2);
-            if (StringUtil.isNotBlank(midRest[0]) && StringUtil.isNotBlank(midRest[1])) {
+            if (midRest.length == 1) {
+            } else if (StringUtil.isNotBlank(midRest[0]) && StringUtil.isNotBlank(midRest[1])) {
                 httpMap.put(midRest[0], midRest[1]);
             }
         }
 
         //将属性值传入http
-        hp.setHttpMethod(HttpMethod.valueOf((String) httpMap.get("httpMethod")));
-        hp.setPath(((String) httpMap.get("path")));
+        String httpMethod = (String) httpMap.get("httpMethod");
+        if (StringUtil.isNotBlank(httpMethod)) {
+            hp.setHttpMethod(HttpMethod.valueOf(httpMethod));
+        }
 
-        String version = (String) httpMap.get("version");
-        switch (version) {
-            case "1.0":
-                hp.setHttpVersion(HttpVersion.valueOf("HTTP1"));
-                break;
-            case "1.1":
-                hp.setHttpVersion(HttpVersion.valueOf("HTTP1_1"));
-                break;
-            case "2.0":
-                hp.setHttpVersion(HttpVersion.valueOf("HTTP2"));
-                break;
+        String path = (String) httpMap.get("path");
+        if (StringUtil.isNotBlank(path)) {
+            hp.setPath(path);
+        }
+
+        if (StringUtil.isNotBlank(((String) httpMap.get("version")))) {
+            String version = (String) httpMap.get("version");
+            switch (version) {
+                case "1.0":
+                    hp.setHttpVersion(HttpVersion.valueOf("HTTP1"));
+                    break;
+                case "1.1":
+                    hp.setHttpVersion(HttpVersion.valueOf("HTTP1_1"));
+                    break;
+                case "2.0":
+                    hp.setHttpVersion(HttpVersion.valueOf("HTTP2"));
+                    break;
+            }
         }
 
 
         String type = (String) httpMap.get("Content-Type");
-        switch (type) {
-            case "application/x-www-form-urlencoded":
-                hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
-                break;
+        type = type.trim().toLowerCase();//有些http客户端会传带空格和大小写混合的body
+        String[] bodyContent = receiveMessage.split("\\r\\n\\r\\n", 2);
+        if (StringUtil.isNotBlank(type)) {
+            switch (type) {
+                case "application/x-www-form-urlencoded":
+                    hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
+                    String[] postContentSave = bodyContent[1].split("&");
+                    Map<String, String> formData = new HashMap<>();
+                    for (String postContentSaveContent : postContentSave) {
+                        String[] postContentSplit = postContentSaveContent.split("=");
+                        formData.put(postContentSplit[0], postContentSplit[1]);
+                    }
+                    hp.setFormData(formData);
+
+                    break;
+                case "application/json":
+                    hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_JSON"));
+                    if (StringUtil.isNotBlank(type)) {
+                        String jsonContent = bodyContent[1];
+                        hp.setJsonData(jsonContent);
+                    }
+                    break;
+            }
         }
 
+        hp.setHost((String) httpMap.getOrDefault("Host", ""));
+        hp.setPragma((String) httpMap.getOrDefault("Pragma", ""));
+        hp.setCacheControl((String) httpMap.getOrDefault("Cache-Control", ""));
+        hp.setUserAgent((String) httpMap.getOrDefault("User-Agent", ""));
+        hp.setSecFetchSite((String) httpMap.getOrDefault("Sec-Fetch-Site", ""));
+        hp.setSecFetchMode((String) httpMap.getOrDefault("Sec-Fetch-Mode", ""));
+        hp.setReferer((String) httpMap.getOrDefault("Referer", ""));
+        hp.setOrigin((String) httpMap.getOrDefault("Origin", ""));
 
-        hp.setHost((String) httpMap.get("Host"));
-        hp.setPragma((String) httpMap.get("Pragma"));
-        hp.setCacheControl((String) httpMap.get("Cache-Control"));
-        hp.setUserAgent((String) httpMap.get("User-Agent"));
-        hp.setSecFetchSite((String) httpMap.get("Sec-Fetch-Site"));
-        hp.setSecFetchMode((String) httpMap.get("Sec-Fetch-Mode"));
-        hp.setReferer((String) httpMap.get("Referer"));
-        String contentLength = (String) httpMap.get("Content-Length");
-        hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
-        hp.setOrigin((String) httpMap.get("Origin"));
-        String acceptMiddle = (String) httpMap.get("Accept");
-        String acceptEncodingMiddle = (String) httpMap.get("Accept-Encoding");
-        String acceptLanguageMiddle = (String) httpMap.get("Accept-Language");
 
-        //PostContent分割
-        if (StringUtil.isNotBlank(((String) httpMap.get("Content-Type")))) {
-            String[] postContentSave = serverReport.get(serverReport.size() - 1).split("&");
-            Map<String, String> formData = new HashMap<>();
-            for (String postContentSaveContent : postContentSave) {
-                String[] postContentSplit = postContentSaveContent.split("=");
-                formData.put(postContentSplit[0], postContentSplit[1]);
-            }
-            hp.setFormData(formData);
+        if (StringUtil.isNotBlank(((String) httpMap.get("Referer")))) {
+            String contentLength = (String) httpMap.get("Content-Length");
+            hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
         }
 
 
         //acceptLanguage分割
-        if (StringUtil.isNotBlank(acceptLanguageMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageMiddle);
+        if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Language")))) {
+            String acceptLanguageStr = (String) httpMap.get("Accept-Language");
+            List<ContentAndQuality> contentAndQualityAcceptLanguageList = resolve2ContentAndQuality(acceptLanguageStr);
             List<AcceptLanguage> acceptLanguageList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAcceptLanguage : contentAndQualityAcceptLanguageList) {
@@ -106,8 +128,9 @@ public class HttpMessageResolver {
         }
 
         //AcceptEncoding分割
-        if (StringUtil.isNotBlank(acceptEncodingMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingMiddle);
+        if (StringUtil.isNotBlank(((String) httpMap.get("Accept-Encoding")))) {
+            String acceptEncodingStr = (String) httpMap.get("Accept-Encoding");
+            List<ContentAndQuality> contentAndQualityAcceptEncodingList = resolve2ContentAndQuality(acceptEncodingStr);
             ;
             List<AcceptEncoding> acceptEncodingList = new RinaArrayList<>();
 
@@ -121,8 +144,9 @@ public class HttpMessageResolver {
         }
 
         //accept分割
-        if (StringUtil.isNotBlank(acceptMiddle)) {
-            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptMiddle);
+        if (StringUtil.isNotBlank(((String) httpMap.get("Accept")))) {
+            String acceptStr = (String) httpMap.get("Accept");
+            List<ContentAndQuality> contentAndQualityAcceptList = resolve2ContentAndQuality(acceptStr);
             List<Accept> acceptList = new RinaArrayList<>();
 
             for (ContentAndQuality contentAndQualityAccept : contentAndQualityAcceptList) {

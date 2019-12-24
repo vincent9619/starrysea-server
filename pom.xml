@@ -10,7 +10,8 @@
 	<modules>
 		<module>core</module>
 		<module>util</module>
-	</modules>
+        <module>jdbc</module>
+    </modules>
 	<build>
 		<plugins>
 			<plugin>

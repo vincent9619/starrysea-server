@@ -30,7 +30,7 @@ public class RinaQuery {
 			}
 			fields = String.join(",", underscoreList);
 		}
-		sql += "select " + fields + " from " + thisTableName + " ";
+		sql += "SELECT " + fields + " FROM " + thisTableName + " ";
 	}
 
 	public void addWhere(String thisFieldName, WhereType type, Object staticValue) {
@@ -39,7 +39,7 @@ public class RinaQuery {
 		}
 		String columnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thisFieldName);
 		lastOperation = "where";
-		String where = "where " + thisTableName + "." + columnName + type.getChara() + "? ";
+		String where = "WHERE " + thisTableName + "." + columnName + type.getChara() + "? ";
 		hasWhere = true;
 		sql += where;
 		valueList.add(staticValue);
@@ -50,7 +50,7 @@ public class RinaQuery {
 			return;
 		}
 		String columnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thisFieldName);
-		String and = "and " + thisTableName + "." + columnName + type.getChara() + "? ";
+		String and = "AND " + thisTableName + "." + columnName + type.getChara() + "? ";
 		sql += and;
 		valueList.add(staticValue);
 	}
@@ -60,7 +60,7 @@ public class RinaQuery {
 			return;
 		}
 		String columnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thisFieldName);
-		String or = "or " + thisTableName + "." + columnName + type.getChara() + "? ";
+		String or = "OR " + thisTableName + "." + columnName + type.getChara() + "? ";
 		sql += or;
 		valueList.add(staticValue);
 	}
@@ -83,7 +83,7 @@ public class RinaQuery {
 			columnNames = String.join(",", underscoreList);
 		}
 		hasOrder = true;
-		sql += "order by " + columnNames + " " + (isAscend ? "asc" : "desc") + " ";
+		sql += "ORDER BY " + columnNames + " " + (isAscend ? "ASC" : "DESC") + " ";
 	}
 
 	public void leftJoin(Class<?> thatTable, String thisFieldName, String thatFieldName) {
@@ -94,7 +94,7 @@ public class RinaQuery {
 		String thatTableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thatTable.getSimpleName());
 		String thisColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thisFieldName);
 		String thatColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, thatFieldName);
-		String join = "left join " + thatTableName + " on " + thisTableName + "." + thisColumnName + "=" + thatTableName + "." + thatColumnName + " ";
+		String join = "LEFT JOIN " + thatTableName + " ON " + thisTableName + "." + thisColumnName + "=" + thatTableName + "." + thatColumnName + " ";
 		sql += join;
 	}
 
@@ -103,7 +103,7 @@ public class RinaQuery {
 			return;
 		}
 		lastOperation = "limit";
-		String limit = "limit " + min + "," + max + " ";
+		String limit = "LIMIT " + min + "," + max + " ";
 		hasLimit = true;
 		sql += limit;
 	}
@@ -113,7 +113,7 @@ public class RinaQuery {
 			return;
 		}
 		lastOperation = "limit";
-		String limit = "limit " + max + " ";
+		String limit = "LIMIT " + max + " ";
 		hasLimit = true;
 		sql += limit;
 	}

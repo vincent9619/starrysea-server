@@ -3,6 +3,7 @@ package top.starrysea.rina.jdbc;
 import com.google.common.base.CaseFormat;
 import top.starrysea.rina.jdbc.cp.BasicConnectionPool;
 import top.starrysea.rina.jdbc.cp.ConnectionPool;
+import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.json.JSONUtil;
 
@@ -13,24 +14,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RinaJdbc {
 
 	private ConnectionPool pool = RinaObjectFactory.getRinaObject(BasicConnectionPool.class);
 	private String sql;
 
-	public RinaJdbc() throws SQLException {
-
-	}
-
 	public int delete(Object o, String idFieldName) throws SQLException {
 		Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
 		Connection connection = pool.getConnection();
 		String idColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, idFieldName);
 		String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
-		sql = "delete from " + tableName
-				+ " where " + idColumnName + "=?";
+		sql = "DELETE FROM " + tableName
+				+ " WHERE " + idColumnName + "=? ";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setObject(1, objectMap.get(idFieldName));
 		int result = statement.executeUpdate();
@@ -52,15 +48,15 @@ public class RinaJdbc {
 		String keys = String.join(",", keyList);
 		String questions = String.join(",", questionList);
 		Connection connection = pool.getConnection();
-		sql = "insert into " + tableName
-				+ "(" + keys + ")" + " value (" + questions + ")";
+		sql = "INSERT INTO " + tableName
+				+ "(" + keys + ")" + " VALUES (" + questions + ") ";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		AtomicInteger index = new AtomicInteger(1);
+		final int[] index = {1};
 		valueList.stream().forEach(v -> {
 			try {
-				statement.setObject(index.getAndIncrement(), v);
+				statement.setObject(index[0]++, v);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RinaException(e.getMessage(), e);
 			}
 		});
 		int result = statement.executeUpdate();
@@ -80,19 +76,19 @@ public class RinaJdbc {
 		});
 		String updateDetail = String.join(",", updateList);
 		Connection connection = pool.getConnection();
-		sql = "update " + tableName
-				+ " set " + updateDetail
-				+ " where " + idColumnName + "=? ";
+		sql = "UPDATE " + tableName
+				+ " SET " + updateDetail
+				+ " WHERE " + idColumnName + "=? ";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		AtomicInteger index = new AtomicInteger(1);
+		final int[] index = {1};
 		valueList.stream().forEach(v -> {
 			try {
-				statement.setObject(index.getAndIncrement(), v);
+				statement.setObject(index[0]++, v);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RinaException(e.getMessage(), e);
 			}
 		});
-		statement.setObject(index.get(), objectMap.get(idFieldName));
+		statement.setObject(index[0], objectMap.get(idFieldName));
 		int result = statement.executeUpdate();
 		pool.releaseConnection(connection);
 		return result;
@@ -103,12 +99,12 @@ public class RinaJdbc {
 		sql = query.getSql();
 		List<Object> valueList = query.getValueList();
 		PreparedStatement statement = connection.prepareStatement(sql);
-		AtomicInteger index = new AtomicInteger(1);
+		final int[] index = {1};
 		valueList.stream().forEach(v -> {
 			try {
-				statement.setObject(index.getAndIncrement(), v);
+				statement.setObject(index[0]++, v);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new RinaException(e.getMessage(), e);
 			}
 		});
 		return statement.executeQuery();

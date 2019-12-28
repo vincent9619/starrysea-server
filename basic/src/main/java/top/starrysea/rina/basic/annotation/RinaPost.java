@@ -1,10 +1,10 @@
-package top.starrysea.rina.core.annotation;
+package top.starrysea.rina.basic.annotation;
 
 import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface RinaGet {
+public @interface RinaPost {
 	String value();
 }

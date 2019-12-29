@@ -1,7 +1,7 @@
 package top.starrysea.rina.core.controller;
 
-import top.starrysea.rina.core.annotation.RinaController;
-import top.starrysea.rina.core.annotation.RinaGet;
+import top.starrysea.rina.basic.annotation.RinaController;
+import top.starrysea.rina.basic.annotation.RinaGet;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 

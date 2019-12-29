@@ -3,7 +3,7 @@ package top.starrysea.rina.core.task.background;
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.file.FileUtil;
-import top.starrysea.rina.core.annotation.BackgroundTask;
+import top.starrysea.rina.basic.annotation.BackgroundTask;
 import top.starrysea.rina.init.ServerConfig;
 
 import java.util.concurrent.TimeUnit;

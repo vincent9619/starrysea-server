@@ -2,7 +2,8 @@ package top.starrysea.rina.init;
 
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
-import top.starrysea.rina.core.annotation.BackgroundTask;
+import top.starrysea.rina.basic.annotation.BackgroundTask;
+import top.starrysea.rina.core.task.InitConnectionPool;
 import top.starrysea.rina.core.task.InitRouter;
 import top.starrysea.rina.core.task.ObjectInject;
 import top.starrysea.rina.core.task.background.BackgroundTaskInterface;
@@ -25,6 +26,7 @@ public class InitTaskList {
         initTaskList.add(initServerConfigTask);
         initTaskList.add(initObjectInjectionTask);
         initTaskList.add(initRouterTask);
+        initTaskList.add(initConnectionPoolTask);
         initTaskList.add(initServerBackgroundTask);
     }
 
@@ -57,6 +59,17 @@ public class InitTaskList {
 			throw new RinaException(e.getMessage(), e);
 		}
 	};
+
+    private static InitTask initConnectionPoolTask = () -> {
+        log.info("执行初始化数据库连接池任务");
+        try {
+            InitConnectionPool task = RinaObjectFactory.generateRinaObject(InitConnectionPool.class);
+            task.execute();
+            log.info("数据库连接池初始化完成");
+        } catch (Exception e) {
+            throw new RinaException(e.getMessage(), e);
+        }
+    };
 
     private static InitTask initServerBackgroundTask = () -> {
         log.info("执行初始化服务器后台任务的初始化任务");

@@ -1,10 +1,10 @@
 package top.starrysea.rina.core.task;
 
 import org.reflections.Reflections;
-import top.starrysea.rina.core.annotation.RinaController;
-import top.starrysea.rina.core.annotation.RinaObject;
-import top.starrysea.rina.core.annotation.RinaService;
-import top.starrysea.rina.core.annotation.RinaWired;
+import top.starrysea.rina.basic.annotation.RinaController;
+import top.starrysea.rina.basic.annotation.RinaObject;
+import top.starrysea.rina.basic.annotation.RinaService;
+import top.starrysea.rina.basic.annotation.RinaWired;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;

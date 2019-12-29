@@ -1,7 +1,7 @@
 package top.starrysea.rina.core.connection;
 
 import lombok.extern.slf4j.Slf4j;
-import top.starrysea.rina.core.annotation.RinaObject;
+import top.starrysea.rina.basic.annotation.RinaObject;
 import top.starrysea.rina.core.connection.entity.*;
 import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;

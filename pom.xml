@@ -11,6 +11,7 @@
 		<module>core</module>
 		<module>util</module>
         <module>jdbc</module>
+        <module>basic</module>
     </modules>
 	<build>
 		<plugins>

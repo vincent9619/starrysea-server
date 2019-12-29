@@ -1,4 +1,4 @@
-package top.starrysea.rina.core.annotation;
+package top.starrysea.rina.basic.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

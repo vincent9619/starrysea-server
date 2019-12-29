@@ -1,6 +1,6 @@
 package top.starrysea.rina.core.connection;
 
-import top.starrysea.rina.core.annotation.RinaBody;
+import top.starrysea.rina.basic.annotation.RinaBody;
 import top.starrysea.rina.core.connection.entity.HttpContent;
 import top.starrysea.rina.core.connection.entity.enums.HttpContentType;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;

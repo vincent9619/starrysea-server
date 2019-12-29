@@ -4,7 +4,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import top.starrysea.rina.core.annotation.*;
+import top.starrysea.rina.basic.annotation.*;
 import top.starrysea.rina.core.connection.entity.enums.HttpMethod;
 import top.starrysea.rina.core.router.RequestInfo;
 import top.starrysea.rina.core.router.RinaRequestMapping;

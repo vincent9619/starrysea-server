@@ -1,10 +1,19 @@
 package top.starrysea.rina.core.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.core.annotation.RinaDao;
+import top.starrysea.rina.core.annotation.RinaWired;
 
+import java.lang.annotation.Annotation;
+
+@Slf4j
 @RinaDao
-public class MurasameDao implements RinaDao<murasame>{
+public class MurasameDao {
 
-// TODO: 2019/12/19 inject from database 
+
+    public void test1() {
+
+        log.info("123");
+    }
 }
 

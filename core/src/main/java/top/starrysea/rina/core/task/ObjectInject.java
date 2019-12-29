@@ -1,10 +1,7 @@
 package top.starrysea.rina.core.task;
 
 import org.reflections.Reflections;
-import top.starrysea.rina.core.annotation.RinaController;
-import top.starrysea.rina.core.annotation.RinaObject;
-import top.starrysea.rina.core.annotation.RinaService;
-import top.starrysea.rina.core.annotation.RinaWired;
+import top.starrysea.rina.core.annotation.*;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
@@ -27,6 +24,7 @@ public class ObjectInject {
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaObject.class);
         classes.addAll(reflections.getTypesAnnotatedWith(RinaController.class));
         classes.addAll(reflections.getTypesAnnotatedWith(RinaService.class));
+        classes.addAll(reflections.getTypesAnnotatedWith(RinaDao.class));
         classes.stream().forEach(clazz -> {
             try {
                 localObjectsCache.put(clazz, clazz.getConstructor().newInstance());

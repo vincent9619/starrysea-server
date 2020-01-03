@@ -71,9 +71,9 @@ public class HttpMessageResolver {
 
 
         String type = (String) httpMap.get("Content-Type");
+        type = type.trim().toLowerCase();//有些http客户端会传带空格和大小写混合的body
+        String[] bodyContent = receiveMessage.split("\\r\\n\\r\\n", 2);
         if (StringUtil.isNotBlank(type)) {
-            type = type.trim().toLowerCase();//有些http客户端会传带空格和大小写混合的body
-            String[] bodyContent = receiveMessage.split("\\r\\n\\r\\n", 2);
             switch (type) {
                 case "application/x-www-form-urlencoded":
                     hp.setHttpContentType(HttpContentType.valueOf("APPLICATION_X_WWW_FORM_URLENCODED"));
@@ -106,9 +106,9 @@ public class HttpMessageResolver {
         hp.setOrigin((String) httpMap.getOrDefault("Origin", ""));
 
 
-        if (StringUtil.isNotBlank(((String) httpMap.get("Content-Length")))) {
+        if (StringUtil.isNotBlank(((String) httpMap.get("Referer")))) {
             String contentLength = (String) httpMap.get("Content-Length");
-            hp.setContentLength(Integer.valueOf(contentLength.trim()));
+            hp.setContentLength(Integer.valueOf(contentLength.trim()).intValue());
         }
 
 

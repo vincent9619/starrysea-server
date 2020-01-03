@@ -2,14 +2,16 @@ package top.starrysea.rina.init;
 
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import top.starrysea.rina.basic.annotation.BackgroundTask;
+import top.starrysea.rina.core.task.InitConnectionPool;
+import top.starrysea.rina.core.task.InitRouter;
 import top.starrysea.rina.core.task.ObjectInject;
+import top.starrysea.rina.core.task.background.BackgroundTaskInterface;
 import top.starrysea.rina.util.collection.RinaArrayList;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.file.FileUtil;
 import top.starrysea.rina.util.thread.ThreadUtil;
-import top.starrysea.rina.core.annotation.BackgroundTask;
-import top.starrysea.rina.core.task.background.BackgroundTaskInterface;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -23,6 +25,8 @@ public class InitTaskList {
         initTaskList = new RinaArrayList<>();
         initTaskList.add(initServerConfigTask);
         initTaskList.add(initObjectInjectionTask);
+        initTaskList.add(initRouterTask);
+        initTaskList.add(initConnectionPoolTask);
         initTaskList.add(initServerBackgroundTask);
     }
 
@@ -40,6 +44,28 @@ public class InitTaskList {
             ObjectInject task = RinaObjectFactory.generateRinaObject(ObjectInject.class);
             task.execute();
             log.info("对象注入完成");
+        } catch (Exception e) {
+            throw new RinaException(e.getMessage(), e);
+        }
+    };
+
+	private static InitTask initRouterTask = () -> {
+		log.info("执行初始化路由任务");
+		try {
+			InitRouter task = RinaObjectFactory.generateRinaObject(InitRouter.class);
+			task.execute();
+			log.info("路由初始化完成");
+		} catch (Exception e) {
+			throw new RinaException(e.getMessage(), e);
+		}
+	};
+
+    private static InitTask initConnectionPoolTask = () -> {
+        log.info("执行初始化数据库连接池任务");
+        try {
+            InitConnectionPool task = RinaObjectFactory.generateRinaObject(InitConnectionPool.class);
+            task.execute();
+            log.info("数据库连接池初始化完成");
         } catch (Exception e) {
             throw new RinaException(e.getMessage(), e);
         }

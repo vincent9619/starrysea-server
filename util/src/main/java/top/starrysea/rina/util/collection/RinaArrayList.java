@@ -12,51 +12,56 @@ import java.util.stream.Collectors;
 
 public class RinaArrayList<E> extends ArrayList<E> implements List<E> {
 
-    public <U> List<U> collectToList(Function<? super E, ? extends U> map) {
-        return collectToList(this, map);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4362925078544633864L;
 
-    public <U> Set<U> collectToSet(Function<? super E, ? extends U> map) {
-        return collectToSet(this, map);
-    }
+	public <U> List<U> collectToList(Function<? super E, ? extends U> map) {
+		return collectToList(this, map);
+	}
 
-    public int intSum(ToIntFunction<? super E> map) {
-        return intSum(this, map);
-    }
+	public <U> Set<U> collectToSet(Function<? super E, ? extends U> map) {
+		return collectToSet(this, map);
+	}
 
-    public double doubleSum(ToDoubleFunction<? super E> map) {
-        return doubleSum(this, map);
-    }
+	public int intSum(ToIntFunction<? super E> map) {
+		return intSum(this, map);
+	}
 
-    public <T> Map<T, List<E>> groupBy(Function<? super E, ? extends T> groupBy) {
-        return groupBy(this, groupBy);
-    }
+	public double doubleSum(ToDoubleFunction<? super E> map) {
+		return doubleSum(this, map);
+	}
 
-    public void forEach(Consumer<? super E> consumer) {
-        forEach(this, consumer);
-    }
+	public <T> Map<T, List<E>> groupBy(Function<? super E, ? extends T> groupBy) {
+		return groupBy(this, groupBy);
+	}
 
-    private <T, U> List<U> collectToList(List<T> list, Function<? super T, ? extends U> map) {
-        return list.stream().map(map).collect(Collectors.toList());
-    }
+	public void forEach(Consumer<? super E> consumer) {
+		forEach(this, consumer);
+	}
 
-    private <T, U> Set<U> collectToSet(List<T> list, Function<? super T, ? extends U> map) {
-        return list.stream().map(map).collect(Collectors.toSet());
-    }
+	private <T, U> List<U> collectToList(List<T> list, Function<? super T, ? extends U> map) {
+		return list.stream().map(map).collect(Collectors.toList());
+	}
 
-    private int intSum(List<E> list, ToIntFunction<? super E> map) {
-        return list.stream().mapToInt(map).sum();
-    }
+	private <T, U> Set<U> collectToSet(List<T> list, Function<? super T, ? extends U> map) {
+		return list.stream().map(map).collect(Collectors.toSet());
+	}
 
-    private double doubleSum(List<E> list, ToDoubleFunction<? super E> map) {
-        return list.stream().mapToDouble(map).sum();
-    }
+	private int intSum(List<E> list, ToIntFunction<? super E> map) {
+		return list.stream().mapToInt(map).sum();
+	}
 
-    private <T> Map<T, List<E>> groupBy(List<E> list, Function<? super E, ? extends T> groupBy) {
-        return list.stream().collect(Collectors.groupingBy(groupBy));
-    }
+	private double doubleSum(List<E> list, ToDoubleFunction<? super E> map) {
+		return list.stream().mapToDouble(map).sum();
+	}
 
-    private void forEach(List<E> list, Consumer<? super E> consumer) {
-        list.stream().forEach(consumer);
-    }
+	private <T> Map<T, List<E>> groupBy(List<E> list, Function<? super E, ? extends T> groupBy) {
+		return list.stream().collect(Collectors.groupingBy(groupBy));
+	}
+
+	private void forEach(List<E> list, Consumer<? super E> consumer) {
+		list.stream().forEach(consumer);
+	}
 }

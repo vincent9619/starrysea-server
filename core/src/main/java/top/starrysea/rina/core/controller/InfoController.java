@@ -7,17 +7,18 @@ import top.starrysea.rina.core.service.MUService;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RinaController
 public class InfoController {
     @RinaWired
-    private MUService muService;
+    public MUService muService;
 
 
     @RinaGet("/info")
-    public Map<String, Object> getInfo() {
+    public Map<String, Object> getInfo() throws SQLException {
         Map<String, Object> infoMap = new HashMap<>();
         infoMap.put("processors", Runtime.getRuntime().availableProcessors());
         infoMap.put("freeMemory", Runtime.getRuntime().freeMemory());
@@ -25,7 +26,7 @@ public class InfoController {
         infoMap.put("serverConfig", RinaObjectFactory.getRinaObject(ServerConfig.class));
         infoMap.put("osName", System.getProperty("os.name"));
         infoMap.put("osVersion", System.getProperty("os.version"));
-        muService.test();
+        muService.test2();
         return infoMap;
     }
 }

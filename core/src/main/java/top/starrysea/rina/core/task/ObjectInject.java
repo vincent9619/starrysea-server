@@ -25,6 +25,7 @@ public class ObjectInject {
         classes.addAll(reflections.getTypesAnnotatedWith(RinaController.class));
         classes.addAll(reflections.getTypesAnnotatedWith(RinaService.class));
         classes.addAll(reflections.getTypesAnnotatedWith(RinaDao.class));
+        classes.addAll(reflections.getTypesAnnotatedWith(RinaJdbc.class));
         classes.stream().forEach(clazz -> {
             try {
                 localObjectsCache.put(clazz, clazz.getConstructor().newInstance());

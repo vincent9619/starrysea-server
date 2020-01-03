@@ -1,6 +1,7 @@
 package top.starrysea.rina.jdbc;
 
 import com.google.common.base.CaseFormat;
+import top.starrysea.rina.basic.annotation.RinaObject;
 import top.starrysea.rina.jdbc.cp.BasicConnectionPool;
 import top.starrysea.rina.jdbc.cp.ConnectionPool;
 import top.starrysea.rina.util.exception.RinaException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@RinaObject
 public class RinaJdbc {
 
 	private ConnectionPool pool = RinaObjectFactory.getRinaObject(BasicConnectionPool.class);

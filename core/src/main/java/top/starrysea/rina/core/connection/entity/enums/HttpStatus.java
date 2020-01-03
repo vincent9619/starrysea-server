@@ -1,7 +1,5 @@
 package top.starrysea.rina.core.connection.entity.enums;
 
-import lombok.Data;
-
 public enum HttpStatus {
 
 	OK(200, "OK"),

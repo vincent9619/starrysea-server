@@ -2,7 +2,12 @@ package top.starrysea.rina.util.exception;
 
 public class RinaFileException extends RinaException {
 
-    public RinaFileException(Throwable throwable) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7567031532459379736L;
+
+	public RinaFileException(Throwable throwable) {
         super(throwable);
     }
 

@@ -24,9 +24,9 @@ public class InitTaskList {
     public InitTaskList() {
         initTaskList = new RinaArrayList<>();
         initTaskList.add(initServerConfigTask);
+        initTaskList.add(initConnectionPoolTask);
         initTaskList.add(initObjectInjectionTask);
         initTaskList.add(initRouterTask);
-        initTaskList.add(initConnectionPoolTask);
         initTaskList.add(initServerBackgroundTask);
     }
 

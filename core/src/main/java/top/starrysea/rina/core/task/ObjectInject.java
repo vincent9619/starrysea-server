@@ -5,10 +5,12 @@ import top.starrysea.rina.basic.annotation.RinaController;
 import top.starrysea.rina.basic.annotation.RinaObject;
 import top.starrysea.rina.basic.annotation.RinaService;
 import top.starrysea.rina.basic.annotation.RinaWired;
+import top.starrysea.rina.core.dao.MurasameDao;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +29,7 @@ public class ObjectInject {
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaObject.class);
         classes.addAll(reflections.getTypesAnnotatedWith(RinaController.class));
         classes.addAll(reflections.getTypesAnnotatedWith(RinaService.class));
+        classes.addAll(reflections.getTypesAnnotatedWith(top.starrysea.rina.core.annotation.RinaDao.class));
         classes.stream().forEach(clazz -> {
             try {
                 localObjectsCache.put(clazz, clazz.getConstructor().newInstance());

@@ -8,11 +8,9 @@ import top.starrysea.rina.util.exception.RinaException;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 import top.starrysea.rina.util.json.JSONUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +94,7 @@ public class RinaJdbc {
 		return result;
 	}
 
-	public ResultSet find(RinaQuery query) throws SQLException {
+	public <T> List<T> find(RinaQuery query, Class<T> voClass) throws SQLException {
 		Connection connection = pool.getConnection();
 		sql = query.getSql();
 		List<Object> valueList = query.getValueList();
@@ -109,6 +107,18 @@ public class RinaJdbc {
 				throw new RinaException(e.getMessage(), e);
 			}
 		});
-		return statement.executeQuery();
+		List<T> resultList = new ArrayList<>();
+		ResultSet resultSet = statement.executeQuery();
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columnCount = metaData.getColumnCount();
+		while (resultSet.next()) {
+			Map<String, Object> resultMap = new HashMap<>();
+			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+				resultMap.put(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, metaData.getColumnName(columnIndex)), resultSet.getObject(columnIndex));
+			}
+			T resultItem = JSONUtil.toObject(JSONUtil.toStr(resultMap), voClass);
+			resultList.add(resultItem);
+		}
+		return resultList;
 	}
 }

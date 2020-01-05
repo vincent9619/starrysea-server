@@ -1,11 +1,12 @@
 package top.starrysea.rina.core.dao;
 
-import lombok.Data;
+
 import lombok.extern.slf4j.Slf4j;
 import top.starrysea.rina.basic.annotation.RinaWired;
 
 
-import top.starrysea.rina.core.kumaOshi.kuma;
+import top.starrysea.rina.core.kumaOshi.Kuma;
+
 import top.starrysea.rina.jdbc.RinaJdbc;
 
 import java.sql.SQLException;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
 @Slf4j
 public class MurasameDao implements RinaDao {
 
-    public kuma kumaoshi = new kuma();
+    public Kuma kumaoshi = new Kuma();
 
     @RinaWired
     public RinaJdbc rinaJdbc;
@@ -22,7 +23,7 @@ public class MurasameDao implements RinaDao {
 
     @Override
     public void add() throws SQLException {
-        rinaJdbc.insert(kumaoshi);
+        //   rinaJdbc.insert(kumaoshi);
     }
 
     @Override

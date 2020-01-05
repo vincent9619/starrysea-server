@@ -3,7 +3,7 @@ package top.starrysea.rina.core.kumaOshi;
 import lombok.Data;
 
 @Data
-public class kuma {
+public class Kuma {
     String cname = "布良梓";
     int cheight = 160;
     int cweight = 40;

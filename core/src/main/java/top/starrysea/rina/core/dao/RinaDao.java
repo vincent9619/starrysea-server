@@ -11,5 +11,7 @@ public interface RinaDao {
     public void delete() throws SQLException;
 
     public void rewrite() throws SQLException;
+
+    public void search() throws SQLException;
 }
 

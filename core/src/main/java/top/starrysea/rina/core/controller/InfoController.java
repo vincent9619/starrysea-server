@@ -15,7 +15,7 @@ import java.util.Map;
 @RinaController
 public class InfoController {
     @RinaWired
-    public MUService muService;
+    private MUService muService;
 
     @RinaGet("/info")
     public Map<String, Object> getInfo() throws SQLException {
@@ -26,7 +26,7 @@ public class InfoController {
         infoMap.put("serverConfig", RinaObjectFactory.getRinaObject(ServerConfig.class));
         infoMap.put("osName", System.getProperty("os.name"));
         infoMap.put("osVersion", System.getProperty("os.version"));
-        muService.murasameDao.add();
+        muService.test2();
         return infoMap;
     }
 }

@@ -1,9 +1,12 @@
 package top.starrysea.rina.core.kumaOshi;
 
+import lombok.Data;
+
+@Data
 public class kuma {
-    String  cname = "布良梓";
-    int cheight=158;
-    int cweight=45;
-    int cage=16;
-    int chealthy=100;
+    String cname = "布良梓";
+    int cheight = 160;
+    int cweight = 40;
+    int cage = 18;
+    int chealthy = 10000;
 }

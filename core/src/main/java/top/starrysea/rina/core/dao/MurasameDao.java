@@ -22,7 +22,7 @@ public class MurasameDao implements RinaDao {
 
     @Override
     public void add() throws SQLException {
-        //rinaJdbc.insert(kumaoshi);
+        rinaJdbc.insert(kumaoshi);
     }
 
     @Override

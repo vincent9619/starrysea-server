@@ -26,7 +26,7 @@ public class InfoController {
         infoMap.put("serverConfig", RinaObjectFactory.getRinaObject(ServerConfig.class));
         infoMap.put("osName", System.getProperty("os.name"));
         infoMap.put("osVersion", System.getProperty("os.version"));
-        //muService.murasameDao.rewrite();
+        muService.murasameDao.add();
         return infoMap;
     }
 }

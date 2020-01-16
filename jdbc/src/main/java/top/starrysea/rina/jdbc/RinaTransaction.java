@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 public class RinaTransaction {
-	Connection connection;
-	String sql;
-	Map<String, Savepoint> savepointMap = new HashMap<>();
+	private Connection connection;
+	private String sql;
+	private Map<String, Savepoint> savepointMap = new HashMap<>();
 	private ConnectionPool pool = RinaObjectFactory.getRinaObject(BasicConnectionPool.class);
 
 	public RinaTransaction() throws SQLException {

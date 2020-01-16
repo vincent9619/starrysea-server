@@ -17,108 +17,109 @@ import java.util.Map;
 @RinaObject
 public class RinaJdbc {
 
-	private ConnectionPool pool = RinaObjectFactory.getRinaObject(BasicConnectionPool.class);
-	private String sql;
+    private ConnectionPool pool = RinaObjectFactory.getRinaObject(BasicConnectionPool.class);
+    private String sql;
 
-	public int delete(Object o, String idFieldName) throws SQLException {
-		Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
-		Connection connection = pool.getConnection();
-		String idColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, idFieldName);
-		String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
-		sql = "DELETE FROM " + tableName
-				+ " WHERE " + idColumnName + "=? ";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setObject(1, objectMap.get(idFieldName));
-		int result = statement.executeUpdate();
-		pool.releaseConnection(connection);
-		return result;
-	}
+    public int delete(Object o, String idFieldName) throws SQLException {
+        Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
+        Connection connection = pool.getConnection();
+        String idColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, idFieldName);
+        String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
+        sql = "DELETE FROM " + tableName
+                + " WHERE " + idColumnName + "=? ";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1, objectMap.get(idFieldName));
+        int result = statement.executeUpdate();
+        pool.releaseConnection(connection);
+        return result;
+    }
 
-	public int insert(Object o) throws SQLException {
-		Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
-		List<String> keyList = new ArrayList<>();
-		List<Object> valueList = new ArrayList<>();
-		List<String> questionList = new ArrayList<>();
-		String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
-		objectMap.forEach((key, value) -> {
-			keyList.add(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key));
-			valueList.add(value);
-			questionList.add("?");
-		});
-		String keys = String.join(",", keyList);
-		String questions = String.join(",", questionList);
-		Connection connection = pool.getConnection();
-		sql = "INSERT INTO " + tableName
-				+ "(" + keys + ")" + " VALUES (" + questions + ") ";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		final int[] index = {1};
-		valueList.stream().forEach(v -> {
-			try {
-				statement.setObject(index[0]++, v);
-			} catch (SQLException e) {
-				throw new RinaException(e.getMessage(), e);
-			}
-		});
-		int result = statement.executeUpdate();
-		pool.releaseConnection(connection);
-		return result;
-	}
+    public int insert(Object o) throws SQLException {
+        Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
+        List<String> keyList = new ArrayList<>();
+        List<Object> valueList = new ArrayList<>();
+        List<String> questionList = new ArrayList<>();
+        String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
+        objectMap.forEach((key, value) -> {
+            keyList.add(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key));
+            valueList.add(value);
+            questionList.add("?");
+        });
+        String keys = String.join(",", keyList);
+        String questions = String.join(",", questionList);
+        Connection connection = pool.getConnection();
+        sql = "INSERT INTO " + tableName
+                + "(" + keys + ")" + " VALUES (" + questions + ") ";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        final int[] index = {1};
+        valueList.stream().forEach(v -> {
+            try {
+                statement.setObject(index[0]++, v);
+            } catch (SQLException e) {
+                throw new RinaException(e.getMessage(), e);
+            }
+        });
+        int result = statement.executeUpdate();
+        pool.releaseConnection(connection);
+        return result;
+    }
 
-	public int update(Object o, String idFieldName) throws SQLException {
-		Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
-		List<String> updateList = new ArrayList<>();
-		List<Object> valueList = new ArrayList<>();
-		String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
-		String idColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, idFieldName);
-		objectMap.forEach((key, value) -> {
-			valueList.add(value);
-			updateList.add(String.format("%s=?", CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key)));
-		});
-		String updateDetail = String.join(",", updateList);
-		Connection connection = pool.getConnection();
-		sql = "UPDATE " + tableName
-				+ " SET " + updateDetail
-				+ " WHERE " + idColumnName + "=? ";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		final int[] index = {1};
-		valueList.stream().forEach(v -> {
-			try {
-				statement.setObject(index[0]++, v);
-			} catch (SQLException e) {
-				throw new RinaException(e.getMessage(), e);
-			}
-		});
-		statement.setObject(index[0], objectMap.get(idFieldName));
-		int result = statement.executeUpdate();
-		pool.releaseConnection(connection);
-		return result;
-	}
+    public int update(Object o, String idFieldName) throws SQLException {
+        Map<String, Object> objectMap = JSONUtil.toMap(JSONUtil.toStr(o));
+        List<String> updateList = new ArrayList<>();
+        List<Object> valueList = new ArrayList<>();
+        String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, o.getClass().getSimpleName());
+        String idColumnName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, idFieldName);
+        objectMap.forEach((key, value) -> {
+            valueList.add(value);
+            updateList.add(String.format("%s=?", CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key)));
+        });
+        String updateDetail = String.join(",", updateList);
+        Connection connection = pool.getConnection();
+        sql = "UPDATE " + tableName
+                + " SET " + updateDetail
+                + " WHERE " + idColumnName + "=? ";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        final int[] index = {1};
+        valueList.stream().forEach(v -> {
+            try {
+                statement.setObject(index[0]++, v);
+            } catch (SQLException e) {
+                throw new RinaException(e.getMessage(), e);
+            }
+        });
+        statement.setObject(index[0], objectMap.get(idFieldName));
+        int result = statement.executeUpdate();
+        pool.releaseConnection(connection);
+        return result;
+    }
 
-	public <T> List<T> find(RinaQuery query, Class<T> voClass) throws SQLException {
-		Connection connection = pool.getConnection();
-		sql = query.getSql();
-		List<Object> valueList = query.getValueList();
-		PreparedStatement statement = connection.prepareStatement(sql);
-		final int[] index = {1};
-		valueList.stream().forEach(v -> {
-			try {
-				statement.setObject(index[0]++, v);
-			} catch (SQLException e) {
-				throw new RinaException(e.getMessage(), e);
-			}
-		});
-		List<T> resultList = new ArrayList<>();
-		ResultSet resultSet = statement.executeQuery();
-		ResultSetMetaData metaData = resultSet.getMetaData();
-		int columnCount = metaData.getColumnCount();
-		while (resultSet.next()) {
-			Map<String, Object> resultMap = new HashMap<>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				resultMap.put(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, metaData.getColumnName(columnIndex)), resultSet.getObject(columnIndex));
-			}
-			T resultItem = JSONUtil.toObject(JSONUtil.toStr(resultMap), voClass);
-			resultList.add(resultItem);
-		}
-		return resultList;
-	}
+    public <T> List<T> find(RinaQuery query, Class<T> voClass) throws SQLException {
+        Connection connection = pool.getConnection();
+        sql = query.getSql();
+        List<Object> valueList = query.getValueList();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        final int[] index = {1};
+        valueList.stream().forEach(v -> {
+            try {
+                statement.setObject(index[0]++, v);
+            } catch (SQLException e) {
+                throw new RinaException(e.getMessage(), e);
+            }
+        });
+        List<T> resultList = new ArrayList<>();
+        ResultSet resultSet = statement.executeQuery();
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        while (resultSet.next()) {
+            Map<String, Object> resultMap = new HashMap<>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                resultMap.put(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, metaData.getColumnName(columnIndex)), resultSet.getObject(columnIndex));
+            }
+            T resultItem = JSONUtil.toObject(JSONUtil.toStr(resultMap), voClass);
+            resultList.add(resultItem);
+            //System.out.println(resultList);
+        }
+        return resultList;
+    }
 }

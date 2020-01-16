@@ -27,6 +27,7 @@ public class ObjectInject {
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(RinaObject.class);
         classes.addAll(reflections.getTypesAnnotatedWith(RinaController.class));
         classes.addAll(reflections.getTypesAnnotatedWith(RinaService.class));
+        classes.addAll(reflections.getTypesAnnotatedWith(top.starrysea.rina.core.annotation.RinaDao.class));
         classes.stream().forEach(clazz -> {
             try {
                 localObjectsCache.put(clazz, clazz.getConstructor().newInstance());

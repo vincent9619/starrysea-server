@@ -54,8 +54,12 @@ public class BasicConnectionPool implements ConnectionPool {
 	}
 
 	@Override
-	public boolean releaseConnection(Connection connection) {
-		connectionPool.add(connection);
+	public boolean releaseConnection(Connection connection) throws SQLException {
+		if (connection.isClosed() || !connection.getAutoCommit()) {
+			connectionPool.add(createConnection(url, user, password));
+		} else {
+			connectionPool.add(connection);
+		}
 		return usedConnections.remove(connection);
 	}
 

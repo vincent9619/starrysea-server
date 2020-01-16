@@ -12,7 +12,7 @@ public class InitConnectionPool {
 		try {
 			ServerConfig config = RinaObjectFactory.getRinaObject(ServerConfig.class);
 			BasicConnectionPool pool = BasicConnectionPool
-					.create(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword());
+					.create(config.getJdbcDriver(), config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword());
 			RinaObjectFactory.putRinaObject(BasicConnectionPool.class, pool);
 		} catch (SQLException e) {
 			throw new RinaException(e.getMessage(), e);

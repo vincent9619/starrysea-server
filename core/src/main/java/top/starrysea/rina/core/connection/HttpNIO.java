@@ -110,7 +110,6 @@ public class HttpNIO {
                 HttpContent httpContent = httpMessageResolver.handleRun(receiveMessage);
 
 
-
                 // 返回客户端
                 HttpResponse httpResponse = HttpRequestResolver.resolve(httpContent);
                 buffer = ByteBuffer.wrap(httpResponse.resolve2String().toString().getBytes(charset));  //在此处测试

@@ -3,8 +3,6 @@ package top.starrysea.rina.core.controller;
 import top.starrysea.rina.basic.annotation.RinaController;
 import top.starrysea.rina.basic.annotation.RinaGet;
 import top.starrysea.rina.basic.annotation.RinaWired;
-import top.starrysea.rina.core.dao.MurasameDao;
-import top.starrysea.rina.core.service.MUService;
 import top.starrysea.rina.init.ServerConfig;
 import top.starrysea.rina.util.factory.RinaObjectFactory;
 
@@ -14,8 +12,6 @@ import java.util.Map;
 
 @RinaController
 public class InfoController {
-    @RinaWired
-    private MUService muService;
 
     @RinaGet("/info")
     public Map<String, Object> getInfo() throws SQLException {
@@ -26,7 +22,6 @@ public class InfoController {
         infoMap.put("serverConfig", RinaObjectFactory.getRinaObject(ServerConfig.class));
         infoMap.put("osName", System.getProperty("os.name"));
         infoMap.put("osVersion", System.getProperty("os.version"));
-        muService.test2();
         return infoMap;
     }
 }

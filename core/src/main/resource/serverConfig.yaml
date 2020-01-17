@@ -1,6 +1,7 @@
 port: 8082
 basePackage: top.starrysea.rina
 waitTime: 50
-jdbcUrl: jdbc:mysql://localhost:3306/mysql?serverTimezone=UTC
-jdbcUsername: root
-jdbcPassword: jhtq8lha233
+jdbcUrl: jdbc:mysql://47.93.223.78:3306/testdb
+jdbcUsername: testdb
+jdbcPassword: niconiconi
+jdbcDriver: com.mysql.cj.jdbc.Driver

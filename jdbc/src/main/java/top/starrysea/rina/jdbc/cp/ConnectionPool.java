@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public interface ConnectionPool {
 	Connection getConnection() throws SQLException;
 
-	boolean releaseConnection(Connection connection);
+	boolean releaseConnection(Connection connection) throws SQLException;
 
 	String getUrl();
 

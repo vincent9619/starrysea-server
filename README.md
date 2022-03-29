@@ -1,5 +1,5 @@
 # starrysea-rina
-This is a group project developed by starrysea website group. Here I will introduce the part I have completed.
+This is a group project developed by starrysea website group.
 Imported from: https://github.com/StarSeaProject/starrysea-rina
 
 Development language: **JAVA**
